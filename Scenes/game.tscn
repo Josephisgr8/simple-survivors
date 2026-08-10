@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://b75hu7foqm148"]
 
+[ext_resource type="Script" uid="uid://f68nwvlve2ns" path="res://Scripts/game.gd" id="1_3dryh"]
 [ext_resource type="Texture2D" uid="uid://blg2ry4qt2pt8" path="res://Assets/Background/grass.png" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://6kuajfiixot1" path="res://Scenes/player.tscn" id="2_qxrlw"]
 [ext_resource type="Script" uid="uid://dhsuvly4iy8nt" path="res://Scripts/enemy_manager.gd" id="3_3dryh"]
@@ -4107,6 +4108,7 @@ texture = ExtResource("1_ebmjs")
 sources/0 = SubResource("TileSetAtlasSource_qxrlw")
 
 [node name="Game" type="Node2D" unique_id=1948239684]
+script = ExtResource("1_3dryh")
 
 [node name="Background" type="TileMapLayer" parent="." unique_id=1302884946]
 z_index = -1

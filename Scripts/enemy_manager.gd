@@ -18,7 +18,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	updateEnemyList()
+	_updateEnemyList()
 	#if we are not at max enemies and none are currently spawning
 	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
 		var newEnemy = EnemyBlueprint.instantiate()
@@ -28,11 +28,29 @@ func _process(delta: float) -> void:
 		enemyList.append(newEnemy)
 		add_child(newEnemy)
 		enemySpawnTimer.start(enemyRespawnTimeSecs)
-
-	updateEnemyList()
 	
 #for telling each enemy the player's position
-func updateEnemyList() -> void:
+func _updateEnemyList() -> void:
 	for i in range(0, enemyList.size()):
 		enemyList.get(i).updatePlayer(player)
 	
+func findEnemyNearestPlayer(position, range):
+	#loop through enemies and find shortest distance that is also in given range
+	var closestEnemy
+	#for each enemy alive
+	for i in range(0, enemyList.size()):
+		var currEnemyDist = enemyList.get(i).global_position.distance_to(position)
+		#if they are within range
+		if  currEnemyDist <= range:
+			#set first enemy within range
+			if closestEnemy == null:
+				closestEnemy= enemyList.get(i)
+				print("assigned initial closest enemy")
+				print(i)
+			#else, check if they are closer, and if so assign them as closest
+			elif currEnemyDist < closestEnemy.global_position.distance_to(position):
+				closestEnemy = enemyList.get(i)
+	if (closestEnemy != null):
+		return closestEnemy.global_position
+	else:
+		return null

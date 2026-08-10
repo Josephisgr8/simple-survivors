@@ -1,16 +1,35 @@
 extends CharacterBody2D
 
+#signals
+signal ReadyForTarget(range)
 
+
+#character stats
 var speed = 200.0
 var speedMultiplier = 1
-var invincibilityDurationSecs = 1
 var maxHP = 10
 var currHP = maxHP
+var invincibilityDurationSecs = 1
+
+#attack stat multipliers
+var damageMult = 1
+var rangeMult = 1
+var castSpeedMult = 1
+var sizeMult = 1
+var projectileSpeedMult = 1
+
+
+#player flags
 var isInvincible = false
 
-@onready var invTimer: Timer = $invincibilityTimer
 
-#func _init() -> void:
+
+@onready var invTimer: Timer = $invincibilityTimer
+@onready var missile_manager: Node = $"Missile Manager"
+
+func _ready() -> void:
+	_updateMissileManager()
+	missile_manager.MissileReadyToFire.connect(_onMissileReadyToFire)
 
 func _physics_process(delta: float) -> void:
 	
@@ -31,6 +50,10 @@ func _physics_process(delta: float) -> void:
 		position.y -= ydirection * speed * delta
 
 	move_and_slide()
+	
+#for processing non-physics logic
+func _process(delta: float) -> void:
+	_updateMissileManager()
 
 func was_hit(hitBy: Node, dmg: int) -> void:
 	if (!isInvincible):
@@ -43,3 +66,18 @@ func was_hit(hitBy: Node, dmg: int) -> void:
 
 func _on_invincibility_timer_timeout() -> void:
 	isInvincible = false
+	
+#missile methods
+func _updateMissileManager() -> void:
+	missile_manager.updateVariables(projectileSpeedMult, castSpeedMult, damageMult, rangeMult, sizeMult)
+	
+func _onMissileReadyToFire(range):
+	#scan the area in range, select an enemy, and fire at them
+	ReadyForTarget.emit(range)
+	
+	
+func fireMissile(xLoc, yLoc):
+	missile_manager.createMissile(global_position.x, global_position.y, xLoc, yLoc)
+	
+func findClosestEnemy(range):
+	pass

@@ -1,19 +1,22 @@
 [gd_scene format=3 uid="uid://bh3a2sclamoua"]
 
 [ext_resource type="Texture2D" uid="uid://b7d04m363g0dh" path="res://Assets/Sprites/Missile.png" id="1_1g1yv"]
+[ext_resource type="Script" uid="uid://dhkevpj576aj8" path="res://Scripts/missile.gd" id="1_u28tq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nhhn2"]
 size = Vector2(14, 63)
 
-[node name="Missile" type="Node" unique_id=168044728]
+[node name="Missile" type="Area2D" unique_id=679473517]
+z_index = 5
+rotation = 1.5707964
+scale = Vector2(0.25, 0.25)
+script = ExtResource("1_u28tq")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=448532664]
 position = Vector2(-20, 14)
 scale = Vector2(0.4884779, 0.53809524)
 texture = ExtResource("1_1g1yv")
 
-[node name="Hitbox" type="Area2D" parent="." unique_id=864539055]
-
-[node name="Hitbox" type="CollisionShape2D" parent="Hitbox" unique_id=1891074985]
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1891074985]
 position = Vector2(0, -31.5)
 shape = SubResource("RectangleShape2D_nhhn2")
