@@ -4,19 +4,19 @@
 [ext_resource type="Script" uid="uid://dhkevpj576aj8" path="res://Scripts/missile.gd" id="1_u28tq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nhhn2"]
-size = Vector2(14, 63)
+size = Vector2(60, 16)
 
 [node name="Missile" type="Area2D" unique_id=679473517]
 z_index = 5
-rotation = 1.5707964
 scale = Vector2(0.25, 0.25)
 script = ExtResource("1_u28tq")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=448532664]
-position = Vector2(-20, 14)
+position = Vector2(-16.000002, -20)
+rotation = 1.5707964
 scale = Vector2(0.4884779, 0.53809524)
 texture = ExtResource("1_1g1yv")
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1891074985]
-position = Vector2(0, -31.5)
+position = Vector2(30, 0)
 shape = SubResource("RectangleShape2D_nhhn2")

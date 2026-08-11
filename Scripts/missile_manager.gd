@@ -8,11 +8,10 @@ var missileList: Array[Area2D]
 const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 
 #missile base stats
-var projectileSpeed = 25
+var projectileSpeed = 150
 var castSpeed = 1
 var damage = 1
 var range = 500
-
 
 #missile multipliers
 var projectileSpeedMult
@@ -63,9 +62,15 @@ func _on_missile_attack_timer_timeout() -> void:
 
 
 func _updateMissileLocation(prjSpd, prjSpdMlt, delta):
-	for i in range(missileList.size()):
-		#var forwardDir = missileList.get(i).global_transform.x
-		var direction = Vector2.from_angle(missileList.get(i).global_rotation + deg_to_rad(-90))
-		missileList.get(i).global_position += direction * (prjSpd + prjSpdMlt) * delta
+	for i in range(missileList.size()-1 ,-1,  -1):
+		var cm = missileList.get(i) # current missile
+		var fs = prjSpd * prjSpdMlt * delta #final speed
 		
+		#move the mssile in it's direction
+		cm.global_position += cm.flightDirection * fs
 		
+		#update the total distance traveled and check if it is max
+		cm.distTraveled += fs
+		if cm.distTraveled >= range:
+			missileList.remove_at(i)
+			cm.queue_free()
