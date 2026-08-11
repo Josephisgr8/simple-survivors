@@ -71,13 +71,11 @@ func _on_invincibility_timer_timeout() -> void:
 func _updateMissileManager() -> void:
 	missile_manager.updateVariables(projectileSpeedMult, castSpeedMult, damageMult, rangeMult, sizeMult)
 	
-func _onMissileReadyToFire(range):
+func _onMissileReadyToFire(rng):
 	#scan the area in range, select an enemy, and fire at them
-	ReadyForTarget.emit(range)
+	ReadyForTarget.emit(rng)
 	
 	
 func fireMissile(xLoc, yLoc):
 	missile_manager.createMissile(global_position.x, global_position.y, xLoc, yLoc)
 	
-func findClosestEnemy(range):
-	pass

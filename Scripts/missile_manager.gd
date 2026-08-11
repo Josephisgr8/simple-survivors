@@ -8,10 +8,10 @@ var missileList: Array[Area2D]
 const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 
 #missile base stats
-var projectileSpeed = 150
+var projectileSpeed = 200
 var castSpeed = 1
 var damage = 1
-var range = 500
+var castRange = 500
 
 #missile multipliers
 var projectileSpeedMult
@@ -31,13 +31,12 @@ func updateVariables(projSpdMult, cstSpdMult, dmgMult, rngMult, szMult) -> void:
 	rangeMult = rngMult
 	sizeMult = szMult
 	attackTimer.wait_time = castSpeed * castSpeedMult
-	pass
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready() -> void:
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_updateMissileLocation(projectileSpeed, projectileSpeedMult, delta)
 	pass
@@ -50,15 +49,12 @@ func createMissile(xFromLoc, yFromLoc, xToLoc, yToLoc) -> void:
 	newMissile.global_position = Vector2(xFromLoc, yFromLoc)
 	newMissile.look_at(Vector2(xToLoc,yToLoc))
 	newMissile.global_scale = newMissile.global_scale * sizeMult
-	#newMissile.flightDirection = (Vector2(xToLoc,yToLoc) - newMissile.global_position).normalized()
-	#newMissile.flightDirection = Vector2(1, 0)
-	
 	missileList.append(newMissile)
 	add_child(newMissile)
 
 
 func _on_missile_attack_timer_timeout() -> void:
-	MissileReadyToFire.emit(range * rangeMult)
+	MissileReadyToFire.emit(castRange * rangeMult)
 
 
 func _updateMissileLocation(prjSpd, prjSpdMlt, delta):
@@ -71,6 +67,6 @@ func _updateMissileLocation(prjSpd, prjSpdMlt, delta):
 		
 		#update the total distance traveled and check if it is max
 		cm.distTraveled += fs
-		if cm.distTraveled >= range:
+		if cm.distTraveled >= castRange * rangeMult:
 			missileList.remove_at(i)
 			cm.queue_free()

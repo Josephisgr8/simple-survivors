@@ -1,22 +1,27 @@
 extends Area2D
 
+#signals
+signal HittingPlayer()
+
 var speed = 100.0
 var speedMultiplier = 1
 var damage = 1
 var damageMultiplier = 1
-var player: CharacterBody2D
+var playerPos
 
 #func _init() -> void:
 
 
 func _process(delta: float) -> void:
-	var playerPos = Vector2(player.position.x, player.position.y)
+	#move
 	var currPos = Vector2(position.x, position.y)
 	position = currPos.move_toward(playerPos, speed * speedMultiplier * delta)
 	
-	#if hitting player
-	if overlaps_body(player):
-		player.was_hit(self, damage * damageMultiplier)
+	#check if overlapping
+	var overlappingAreas = get_overlapping_areas()
+	for area in overlappingAreas:
+		if area.name == "Player":
+			HittingPlayer.emit(self, damage * damageMultiplier)
 
-func updatePlayer(Player):
-	player = Player
+func updatePlayerPos(pos):
+	playerPos = pos

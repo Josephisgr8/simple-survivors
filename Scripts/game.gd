@@ -8,22 +8,26 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	player.ReadyForTarget.connect(_findEnemyClosestToPlayer)
-	#Engine.time_scale = 0.25
+	player.ReadyForTarget.connect(_onReadyForTarget)
+	enemyManager.ReadyToUpdateEnemiesWithPlayerPos.connect(_onReadyToUpdateEnemiesWithPlayerPos)
+	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+#func _process(delta: float) -> void:
+	#pass
 
 
-func _findEnemyClosestToPlayer(range):
+func _onReadyForTarget(rng):
 	#find loc of enemy nearest the player
-	print("finding enemy nearest player")
-	var closestEnemy = enemyManager.findEnemyNearestPlayer(player.global_position, range)
+	var closestEnemy = enemyManager.findEnemyNearestPlayer(player.global_position, rng)
 	if closestEnemy == null:
-		print("couldnt find")
 		player.fireMissile(player.global_position.x, player.global_position.y)
 	else:
 		player.fireMissile(closestEnemy.x, closestEnemy.y)
-		print("found enemy")
+
+func _onReadyToUpdateEnemiesWithPlayerPos():
+	enemyManager.updateEnemyList(player.global_position)
+	
+func _onPlayerIsBeingHit(src, dmg):
+	player.wasHit(src, dmg)
