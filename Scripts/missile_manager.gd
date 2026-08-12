@@ -10,15 +10,17 @@ const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 #missile base stats
 var projectileSpeed = 200
 var castSpeed = 1
-var damage = 1
+var projectileDamage = 1
 var castRange = 500
+var penetrationValue = 1
 
 #missile multipliers
-var projectileSpeedMult
-var castSpeedMult
-var damageMult
-var rangeMult
-var sizeMult
+var projectileSpeedMult = 1
+var castSpeedMult = 1
+var projectileDamageMult = 1
+var rangeMult = 1
+var sizeMult = 1
+var penetrationValueMult = 1
 
 
 @onready var attackTimer: Timer = $MissileAttackTimer
@@ -27,7 +29,7 @@ var sizeMult
 func updateVariables(projSpdMult, cstSpdMult, dmgMult, rngMult, szMult) -> void:
 	projectileSpeedMult = projSpdMult
 	castSpeedMult = cstSpdMult
-	damageMult = dmgMult
+	projectileDamageMult = dmgMult
 	rangeMult = rngMult
 	sizeMult = szMult
 	attackTimer.wait_time = castSpeed * castSpeedMult
@@ -49,8 +51,12 @@ func createMissile(xFromLoc, yFromLoc, xToLoc, yToLoc) -> void:
 	newMissile.global_position = Vector2(xFromLoc, yFromLoc)
 	newMissile.look_at(Vector2(xToLoc,yToLoc))
 	newMissile.global_scale = newMissile.global_scale * sizeMult
+	newMissile.penetrationValue = penetrationValue * penetrationValueMult
 	missileList.append(newMissile)
 	add_child(newMissile)
+	
+	#set up signal for each new missile
+	newMissile.enemyHitWithMissile.connect(_onEnemyHitWithMissile)
 
 
 func _on_missile_attack_timer_timeout() -> void:
@@ -70,3 +76,17 @@ func _updateMissileLocation(prjSpd, prjSpdMlt, delta):
 		if cm.distTraveled >= castRange * rangeMult:
 			missileList.remove_at(i)
 			cm.queue_free()
+
+
+func _onEnemyHitWithMissile(enemy, missile):
+	var totalDamage = projectileDamage * projectileDamageMult
+	#double check for potential future crashes
+	if enemy.has_method("damageTaken"):
+		enemy.damageTaken(totalDamage, missile)
+	
+	#minus one penetration, and remove if none left
+	missile.penetrationValue -= 1
+	if missile.penetrationValue <= 0:
+		missileList.remove_at(missileList.find(missile))
+		missile.queue_free()
+	

@@ -9,6 +9,7 @@ size = Vector2(60, 16)
 [node name="Missile" type="Area2D" unique_id=679473517]
 z_index = 5
 scale = Vector2(0.25, 0.25)
+collision_mask = 2
 script = ExtResource("1_u28tq")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=448532664]
@@ -20,3 +21,5 @@ texture = ExtResource("1_1g1yv")
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1891074985]
 position = Vector2(30, 0)
 shape = SubResource("RectangleShape2D_nhhn2")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

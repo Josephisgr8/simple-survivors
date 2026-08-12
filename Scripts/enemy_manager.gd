@@ -11,6 +11,17 @@ var enemyRespawnTimeSecs = 2
 var enemySizeScale = 0.5
 var spawnGroundsX = Vector2i(0, 2016)
 var spawnGroundsY = Vector2i(0, 2016)
+
+
+#enemy stats
+var enemySpeed = 100.0
+var enemySpeedMultiplier = 1
+var enemyDamage = 1
+var enemyDamageMultiplier = 1
+var enemyMaxHealth = 5
+var enemyMaxHealthMult = 1
+
+
 @onready var enemySpawnTimer: Timer = $EnemySpawnTimer
 
 # Called when the node enters the scene tree for the first time.
@@ -30,10 +41,13 @@ func updateEnemyList(pos) -> void:
 		
 func _checkForAndSpawnEnemy():
 	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
-		#create new enemy and start timer
+		#create new enemy and set stats
 		var newEnemy = EnemyBlueprint.instantiate()
 		newEnemy.position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
 		newEnemy.scale = Vector2(enemySizeScale, enemySizeScale)
+		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult)
+		
+		#add enemy to list and start timer for next enemy
 		enemyList.append(newEnemy)
 		add_child(newEnemy)
 		enemySpawnTimer.start(enemyRespawnTimeSecs)
@@ -41,7 +55,10 @@ func _checkForAndSpawnEnemy():
 		#set signal up for new enemy if it has this signal (extra if statement is for potential crashes in the future)
 		if newEnemy.has_signal("_enemyHittingPLayer"):
 			newEnemy.HittingPlayer.connect(_enemyHittingPLayer)
-	
+		if newEnemy.has_signal("EnemyDied"):
+			newEnemy.EnemyDied.connect(_onEnemyDied)
+			
+
 func findEnemyNearestPlayer(position, rng):
 	#loop through enemies and find shortest distance that is also in given range
 	var closestEnemy = null
@@ -64,3 +81,7 @@ func findEnemyNearestPlayer(position, rng):
 func _enemyHittingPLayer(enmy, dmg):
 	PlayerIsBeingHit.emit(enmy, dmg)
 	
+
+func _onEnemyDied(enemy):	
+	enemyList.remove_at(enemyList.find(enemy))
+	enemy.queue_free()
