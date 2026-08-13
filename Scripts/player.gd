@@ -26,39 +26,46 @@ var isInvincible = false
 
 @onready var invTimer: Timer = $invincibilityTimer
 @onready var missile_manager: Node = $"Missile Manager"
+@onready var player_state_manager: Node = $PlayerStateManager
 
 func _ready() -> void:
 	_updateMissileManager()
 	missile_manager.MissileReadyToFire.connect(_onMissileReadyToFire)
 
-func _physics_process(delta: float) -> void:
-	
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var xdirection := Input.get_axis("Left", "Right")
-	if xdirection:
-		#velocity.x = direction * speed
-		position.x += xdirection * speed * speedMultiplier * delta
-	else:
-		position.x -= xdirection * speed * speedMultiplier * delta
-		
-	var ydirection := Input.get_axis("Up", "Down")
-	if ydirection:
-		#velocity.x = direction * speed
-		position.y += ydirection * speed * delta
-	else:
-		position.y -= ydirection * speed * delta
-
-	move_and_slide()
 	
 #for processing non-physics logic
 func _process(delta: float) -> void:
 	_updateMissileManager()
+	
+	var movementDirection = Input.get_vector("Left", "Right", "Up", "Down")
+	player_state_manager.move(movementDirection)
+
+	
+	
+	#old movement
+	
+	#var xdirection := Input.get_axis("Left", "Right")
+	#
+	#if xdirection:
+		#
+		##velocity.x = direction * speed
+		#position.x += xdirection * speed * speedMultiplier * delta
+		#print(global_position)
+	#else:
+		#position.x -= xdirection * speed * speedMultiplier * delta
+		#
+	#
+	#var ydirection := Input.get_axis("Up", "Down")
+	#if ydirection:
+		##velocity.x = direction * speed
+		#position.y += ydirection * speed * delta
+	#else:
+		#position.y -= ydirection * speed * delta
 
 func was_hit(hitBy: Node, dmg: int) -> void:
 	if (!isInvincible):
 		currHP -= dmg
-		print("player was hit, " + str(currHP) + " HP remaining")
+		print("player was hit, ", currHP, " HP remaining")
 		isInvincible = true
 		invTimer.start(invincibilityDurationSecs)
 	

@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://6kuajfiixot1"]
+
+[ext_resource type="Script" uid="uid://cuu4ny68oqmyo" path="res://Scripts/player.gd" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://dxxubuy33m53w" path="res://Assets/Sprites/Player.png" id="2_6t5aa"]
+[ext_resource type="Script" uid="uid://6l2vvcbr4ngh" path="res://Scripts/player_state_manager.gd" id="2_vgqql"]
+[ext_resource type="Script" uid="uid://djkq355wi2n8i" path="res://Scripts/missile_manager.gd" id="3_6t5aa"]
+[ext_resource type="Script" uid="uid://b03xtxfdjipyk" path="res://Scripts/PlayerStates/player_state_moving_alive.gd" id="3_x3wgy"]
+[ext_resource type="Script" uid="uid://dxtbsvfqk6mry" path="res://Scripts/PlayerStates/player_state_idle_alive.gd" id="4_3smsa"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gn4dx"]
+radius = 49.0
+height = 104.0
+
+[node name="Player" type="CharacterBody2D" unique_id=470280197]
+script = ExtResource("1_cvnsp")
+
+[node name="PlayerStateManager" type="Node" parent="." unique_id=1069392721]
+script = ExtResource("2_vgqql")
+
+[node name="PlayerState_Moving_Alive" type="Node" parent="PlayerStateManager" unique_id=507725609]
+script = ExtResource("3_x3wgy")
+
+[node name="PlayerState_Idle_Alive" type="Node" parent="PlayerStateManager" unique_id=960005176]
+script = ExtResource("4_3smsa")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1450216513]
+position = Vector2(-7.6250305, 28.625015)
+scale = Vector2(0.5001516, 0.5283069)
+texture = ExtResource("2_6t5aa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=147984277]
+position = Vector2(-0.62503004, 0.62501526)
+shape = SubResource("CapsuleShape2D_gn4dx")
+
+[node name="invincibilityTimer" type="Timer" parent="." unique_id=2064015038]
+one_shot = true
+
+[node name="Missile Manager" type="Node" parent="." unique_id=456275315]
+script = ExtResource("3_6t5aa")
+
+[node name="MissileAttackTimer" type="Timer" parent="Missile Manager" unique_id=681588047]
+autostart = true
+
+[connection signal="timeout" from="invincibilityTimer" to="." method="_on_invincibility_timer_timeout"]
+[connection signal="timeout" from="Missile Manager/MissileAttackTimer" to="Missile Manager" method="_on_missile_attack_timer_timeout"]

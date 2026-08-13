@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cuu4ny68oqmyo" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://dxxubuy33m53w" path="res://Assets/Sprites/Player.png" id="2_6t5aa"]
+[ext_resource type="Script" uid="uid://6l2vvcbr4ngh" path="res://Scripts/player_state_manager.gd" id="2_vgqql"]
 [ext_resource type="Script" uid="uid://djkq355wi2n8i" path="res://Scripts/missile_manager.gd" id="3_6t5aa"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gn4dx"]
@@ -10,6 +11,9 @@ height = 104.0
 
 [node name="Player" type="CharacterBody2D" unique_id=470280197]
 script = ExtResource("1_cvnsp")
+
+[node name="PlayerStateManager" type="Node" parent="." unique_id=1069392721]
+script = ExtResource("2_vgqql")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1450216513]
 position = Vector2(-7.6250305, 28.625015)

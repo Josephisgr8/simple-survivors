@@ -18,8 +18,8 @@ var playerPos
 
 func _process(delta: float) -> void:
 	#move
-	var currPos = Vector2(position.x, position.y)
-	position = currPos.move_toward(playerPos, enemySpeed * delta)
+	var currPos = Vector2(global_position.x, global_position.y)
+	global_position = currPos.move_toward(playerPos, enemySpeed * delta)
 	
 	#check if overlapping
 	var overlappingAreas = get_overlapping_areas()

@@ -8,8 +8,8 @@ var missileList: Array[Area2D]
 const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 
 #missile base stats
-var projectileSpeed = 200
-var castSpeed = 1
+var projectileSpeed = 350
+var castSpeed = 2
 var projectileDamage = 1
 var castRange = 500
 var penetrationValue = 1
@@ -47,7 +47,7 @@ func _process(delta: float) -> void:
 func createMissile(xFromLoc, yFromLoc, xToLoc, yToLoc) -> void:
 	var newMissile = MissileBlueprint.instantiate()
 	
-	#set rotation based off player's position and target's position
+	#set var values and add missile to list
 	newMissile.global_position = Vector2(xFromLoc, yFromLoc)
 	newMissile.look_at(Vector2(xToLoc,yToLoc))
 	newMissile.global_scale = newMissile.global_scale * sizeMult

@@ -6,6 +6,7 @@ signal enemyHitWithMissile(target)
 var distTraveled
 var penetrationValue
 var flightDirection: Vector2
+var enemiesHitList: Array[Area2D]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,11 +18,12 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	#signal when hitting enemy
 	pass
-	#var overlappingAreas = get_overlapping_areas()
-	#for area in overlappingAreas:
-		#if area.name == "Enemy":
-			#enemyHitWithMissile.emit(area)
 			
 func _on_area_entered(area: Area2D) -> void:
 	#with the collision mask, this will always be an enemy
+	
+	#if enemy already hit, don't count as hit
+	if enemiesHitList.has(area):
+		return
 	enemyHitWithMissile.emit(area, self)
+	enemiesHitList.append(area)
