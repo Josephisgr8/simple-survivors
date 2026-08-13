@@ -5,22 +5,22 @@ signal ReadyForTarget(range)
 
 
 #character stats
-var speed = 200.0
-var speedMultiplier = 1
-var maxHP = 10
-var currHP = maxHP
-var invincibilityDurationSecs = 1
+var speed := 200.0
+var speedMultiplier := 1.0
+var maxHP := 10
+var currHP := maxHP
+var invincibilityDurationSecs := 1.0
 
 #attack stat multipliers
-var damageMult = 1
-var rangeMult = 1
-var castSpeedMult = 1
-var sizeMult = 1
-var projectileSpeedMult = 1
+var damageMult := 1.0
+var rangeMult := 1.0
+var castSpeedMult := 1.0
+var sizeMult := 1.0
+var projectileSpeedMult := 1.0
 
 
 #player flags
-var isInvincible = false
+var isInvincible := false
 
 
 

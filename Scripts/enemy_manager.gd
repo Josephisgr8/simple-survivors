@@ -6,20 +6,20 @@ signal ReadyToUpdateEnemiesWithPlayerPos()
 signal PlayerIsBeingHit()
 
 var enemyList: Array[Area2D]
-var maxEnemies = 5
-var enemyRespawnTimeSecs = 2
-var enemySizeScale = 0.5
-var spawnGroundsX = Vector2i(0, 2016)
-var spawnGroundsY = Vector2i(0, 2016)
+var maxEnemies := 5
+var enemyRespawnTimeSecs := 2.0
+var enemySizeScale := 0.5
+var spawnGroundsX: Vector2i = Vector2i(0, 2016)
+var spawnGroundsY: Vector2i = Vector2i(0, 2016)
 
 
 #enemy stats
-var enemySpeed = 100.0
-var enemySpeedMultiplier = 1
-var enemyDamage = 1
-var enemyDamageMultiplier = 1
-var enemyMaxHealth = 5
-var enemyMaxHealthMult = 1
+var enemySpeed := 100.0
+var enemySpeedMultiplier := 1.0
+var enemyDamage := 1
+var enemyDamageMultiplier := 1.0
+var enemyMaxHealth := 5
+var enemyMaxHealthMult := 1.0
 
 
 @onready var enemySpawnTimer: Timer = $EnemySpawnTimer

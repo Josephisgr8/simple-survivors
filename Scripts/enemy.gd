@@ -5,13 +5,13 @@ signal HittingPlayer()
 signal EnemyDied()
 
 #stats
-var enemySpeed
-var enemyDamage
-var enemyMaxHealth
-var enemyCurrentHealth
+var enemySpeed: float
+var enemyDamage: int
+var enemyMaxHealth: int
+var enemyCurrentHealth: int
 
 #vars
-var playerPos
+var playerPos: Vector2
 
 #func _init() -> void:
 

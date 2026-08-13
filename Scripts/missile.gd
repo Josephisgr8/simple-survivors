@@ -3,8 +3,8 @@ extends Area2D
 #signal
 signal enemyHitWithMissile(target)
 
-var distTraveled
-var penetrationValue
+var distTraveled: float
+var penetrationValue: int
 var flightDirection: Vector2
 var enemiesHitList: Array[Area2D]
 

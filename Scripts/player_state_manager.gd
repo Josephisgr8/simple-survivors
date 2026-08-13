@@ -1,7 +1,7 @@
 extends Node
 
 var currentState: PlayerState
-var player #This makes the class tightly coupled, but that is ok since by nature the PLayerState is dependent and revolves around the Player
+var player: CharacterBody2D #This makes the class tightly coupled, but that is ok since by nature the PLayerState is dependent and revolves around the Player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
