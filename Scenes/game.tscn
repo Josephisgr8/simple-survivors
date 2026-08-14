@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://blg2ry4qt2pt8" path="res://Assets/Background/grass.png" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://6kuajfiixot1" path="res://Scenes/player.tscn" id="2_qxrlw"]
 [ext_resource type="Script" uid="uid://dhsuvly4iy8nt" path="res://Scripts/enemy_manager.gd" id="3_3dryh"]
+[ext_resource type="Script" uid="uid://cs5oxhfleo38f" path="res://Scripts/xp_manager.gd" id="5_wowpa"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qxrlw"]
 texture = ExtResource("1_ebmjs")
@@ -4132,4 +4133,10 @@ unique_name_in_owner = true
 script = ExtResource("3_3dryh")
 
 [node name="EnemySpawnTimer" type="Timer" parent="Enemy Manager" unique_id=1529356088]
+one_shot = true
+
+[node name="XP Manager" type="Node" parent="." unique_id=1234328404]
+script = ExtResource("5_wowpa")
+
+[node name="XP Orb Combine Wait" type="Timer" parent="XP Manager" unique_id=946376504]
 one_shot = true

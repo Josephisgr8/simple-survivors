@@ -10,6 +10,8 @@ var speedMultiplier := 1.0
 var maxHP := 10
 var currHP := maxHP
 var invincibilityDurationSecs := 1.0
+var currentXP: int = 0
+var xpToLevel: int = 100
 
 #attack stat multipliers
 var damageMult := 1.0
@@ -17,6 +19,8 @@ var rangeMult := 1.0
 var castSpeedMult := 1.0
 var sizeMult := 1.0
 var projectileSpeedMult := 1.0
+var xpMult := 1.0
+var xpToLevelMult := 1.0
 
 
 #player flags

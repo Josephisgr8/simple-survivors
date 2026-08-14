@@ -4,23 +4,28 @@ const EnemyBlueprint: PackedScene = preload("res://Scenes/enemy.tscn")
 #signals
 signal ReadyToUpdateEnemiesWithPlayerPos()
 signal PlayerIsBeingHit()
+signal EnemyDied()
 
 var enemyList: Array[Area2D]
 var maxEnemies := 5
 var enemyRespawnTimeSecs := 2.0
-var enemySizeScale := 0.5
+var enemyPushoffForce := 3
 var spawnGroundsX: Vector2i = Vector2i(0, 2016)
 var spawnGroundsY: Vector2i = Vector2i(0, 2016)
 
 
 #enemy stats
 var enemySpeed := 100.0
-var enemySpeedMultiplier := 1.0
 var enemyDamage := 1
-var enemyDamageMultiplier := 1.0
 var enemyMaxHealth := 5
-var enemyMaxHealthMult := 1.0
+var xpValue := 1.0
 
+#enemy stat multipliers
+var enemySizeScale := 0.3
+var enemySpeedMultiplier := 1.0
+var enemyDamageMultiplier := 1.0
+var enemyMaxHealthMult := 1.0
+var xpValueMult := 1.0
 
 @onready var enemySpawnTimer: Timer = $EnemySpawnTimer
 
@@ -36,16 +41,29 @@ func _process(delta: float) -> void:
 
 #for telling each enemy the player's position
 func updateEnemyList(pos) -> void:
-	for i in range(0, enemyList.size()):
-		enemyList.get(i).updatePlayerPos(pos)
+	for enemy in enemyList:
+		enemy.updatePlayerPos(pos)
+		#also get and set push vector
+		var pushOffset: Vector2 = Vector2(0,0)
+		var scaledRadius: float = enemy.collisionShape.shape.radius * enemySizeScale
+		var minDistance: float = scaledRadius * enemyPushoffForce
+		for enemy2 in enemyList:
+			if enemy == enemy2:
+				continue
+			var dist: float = enemy.global_position.distance_to(enemy2.global_position)
+			if dist <= minDistance and dist > 0.0: #prevent division by 0
+				var pushDirection: Vector2 = (enemy.global_position - enemy2.global_position) / dist
+				var overlapAmountPercent: float = 1.0 - (dist / minDistance) # how much enemies are in each others bubble
+				pushOffset += pushDirection * (overlapAmountPercent * minDistance)
+		enemy.updatePushOffset(pushOffset)
 		
 func _checkForAndSpawnEnemy():
 	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
 		#create new enemy and set stats
 		var newEnemy = EnemyBlueprint.instantiate()
-		newEnemy.position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
-		newEnemy.scale = Vector2(enemySizeScale, enemySizeScale)
-		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult)
+		newEnemy.global_position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
+		newEnemy.global_scale = Vector2(enemySizeScale, enemySizeScale)
+		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult, xpValue * xpValueMult)
 		
 		#add enemy to list and start timer for next enemy
 		enemyList.append(newEnemy)
@@ -83,5 +101,6 @@ func _enemyHittingPLayer(enmy, dmg):
 	
 
 func _onEnemyDied(enemy):	
+	EnemyDied.emit(enemy.global_position, enemy.xpValue)
 	enemyList.remove_at(enemyList.find(enemy))
 	enemy.queue_free()

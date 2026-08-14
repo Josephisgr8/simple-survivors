@@ -5,12 +5,14 @@ extends Node2D
 
 @onready var player: CharacterBody2D = %Player
 @onready var enemyManager: Node = %"Enemy Manager"
+@onready var xpmanager: Node = $"XP Manager"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player.ReadyForTarget.connect(_onReadyForTarget)
 	enemyManager.ReadyToUpdateEnemiesWithPlayerPos.connect(_onReadyToUpdateEnemiesWithPlayerPos)
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
+	enemyManager.EnemyDied.connect(_onEnemyDied)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,3 +33,6 @@ func _onReadyToUpdateEnemiesWithPlayerPos():
 	
 func _onPlayerIsBeingHit(src, dmg):
 	player.wasHit(src, dmg)
+	
+func _onEnemyDied(pos, xpval):
+	xpmanager.spawnXP(pos, xpval)
