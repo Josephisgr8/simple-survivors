@@ -7,7 +7,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func _init() -> void:
-	print("idle now init")
+	pass
 	
 func move(dir):
 	direction = dir

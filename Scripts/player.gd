@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 #signals
 signal ReadyForTarget(range)
@@ -12,6 +13,7 @@ var currHP := maxHP
 var invincibilityDurationSecs := 1.0
 var currentXP: int = 0
 var xpToLevel: int = 100
+var xpPickupRange := 100.0
 
 #attack stat multipliers
 var damageMult := 1.0
@@ -21,6 +23,7 @@ var sizeMult := 1.0
 var projectileSpeedMult := 1.0
 var xpMult := 1.0
 var xpToLevelMult := 1.0
+var xpPickupRangeMult := 1.0
 
 
 #player flags
@@ -43,8 +46,6 @@ func _process(delta: float) -> void:
 	
 	var movementDirection = Input.get_vector("Left", "Right", "Up", "Down")
 	player_state_manager.move(movementDirection)
-
-	
 	
 	#old movement
 	
@@ -86,7 +87,9 @@ func _onMissileReadyToFire(rng):
 	#scan the area in range, select an enemy, and fire at them
 	ReadyForTarget.emit(rng)
 	
+func gainXp(val: int):
+	currentXP += val * xpMult
+	print("total xp: ", currentXP)
 	
 func fireMissile(xLoc, yLoc):
 	missile_manager.createMissile(global_position.x, global_position.y, xLoc, yLoc)
-	

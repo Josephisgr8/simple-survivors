@@ -1,4 +1,9 @@
 extends Sprite2D
+class_name XP_Orb
+
+#signals
+signal DeleteOrb
+
 
 var xpValue: int #This is the total xp value of the orb, and is used to increase the size of the orb.
 
@@ -15,3 +20,6 @@ var xpValue: int #This is the total xp value of the orb, and is used to increase
 func resize(baseScale, addScale) -> void:
 	var totScale: float = (xpValue * addScale) + baseScale
 	global_scale = Vector2(totScale, totScale)
+	
+func deleteOrb() -> void:
+	DeleteOrb.emit(self)

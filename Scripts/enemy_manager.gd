@@ -102,5 +102,5 @@ func _enemyHittingPLayer(enmy, dmg):
 
 func _onEnemyDied(enemy):	
 	EnemyDied.emit(enemy.global_position, enemy.xpValue)
-	enemyList.remove_at(enemyList.find(enemy))
+	enemyList.erase(enemy)
 	enemy.queue_free()

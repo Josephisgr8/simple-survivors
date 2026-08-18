@@ -4,9 +4,9 @@ extends Node2D
 var mapSize := 2016
 
 
-@onready var player: CharacterBody2D = %Player
+@onready var player: Player = %Player
 @onready var enemyManager: Node = %"Enemy Manager"
-@onready var xpmanager: Node = $"XP Manager"
+@onready var xpmanager: XP_Manager = $"XP Manager"
 @onready var background: TileMapLayer = $Background
 
 # Called when the node enters the scene tree for the first time.
@@ -17,12 +17,13 @@ func _ready() -> void:
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
 	
-	background.set
+	xpmanager.XP_Absorbed.connect(func(rawVal: int): player.gainXp(rawVal))
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
+func _process(delta: float) -> void:
+	xpmanager.updatePlayerInfo(player.global_position, player.xpPickupRange * player.xpPickupRangeMult)
+	pass
 
 
 func _onReadyForTarget(rng):

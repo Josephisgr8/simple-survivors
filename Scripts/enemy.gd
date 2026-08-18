@@ -43,7 +43,6 @@ func updatePushOffset(offset: Vector2):
 	
 func damageTaken(dmg, src):
 	enemyCurrentHealth -= dmg
-	print(enemyCurrentHealth, "/", enemyMaxHealth)
 	if (enemyCurrentHealth <= 0):
 		_enemyDie()
 	
