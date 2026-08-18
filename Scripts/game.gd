@@ -1,18 +1,23 @@
 extends Node2D
 
 
+var mapSize := 2016
 
 
 @onready var player: CharacterBody2D = %Player
 @onready var enemyManager: Node = %"Enemy Manager"
 @onready var xpmanager: Node = $"XP Manager"
+@onready var background: TileMapLayer = $Background
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player.ReadyForTarget.connect(_onReadyForTarget)
+	
 	enemyManager.ReadyToUpdateEnemiesWithPlayerPos.connect(_onReadyToUpdateEnemiesWithPlayerPos)
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
+	
+	background.set
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

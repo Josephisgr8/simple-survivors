@@ -10,8 +10,8 @@ const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 #missile base stats
 var projectileSpeed := 350.0
 var castSpeed := 1.5
-var projectileDamage := 1
-var castRange := 500.0
+var projectileDamage := 5
+var castRange := 450.0
 var penetrationValue := 1
 
 #missile multipliers

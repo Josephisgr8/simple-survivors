@@ -8,7 +8,7 @@ signal EnemyDied()
 
 var enemyList: Array[Area2D]
 var maxEnemies := 5
-var enemyRespawnTimeSecs := 2.0
+var enemyRespawnTimeSecs := 1.0
 var enemyPushoffForce := 3
 var spawnGroundsX: Vector2i = Vector2i(0, 2016)
 var spawnGroundsY: Vector2i = Vector2i(0, 2016)

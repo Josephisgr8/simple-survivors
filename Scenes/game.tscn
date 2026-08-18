@@ -4119,7 +4119,7 @@ tile_set = SubResource("TileSet_nhhn2")
 
 [node name="Player" parent="." unique_id=1538371056 instance=ExtResource("2_qxrlw")]
 unique_name_in_owner = true
-position = Vector2(576, 347)
+position = Vector2(1084, 1095)
 scale = Vector2(0.5, 0.5)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1588687579]
@@ -4139,4 +4139,6 @@ one_shot = true
 script = ExtResource("5_wowpa")
 
 [node name="XP Orb Combine Wait" type="Timer" parent="XP Manager" unique_id=946376504]
-one_shot = true
+autostart = true
+
+[connection signal="timeout" from="XP Manager/XP Orb Combine Wait" to="XP Manager" method="_on_xp_orb_combine_wait_timeout"]
