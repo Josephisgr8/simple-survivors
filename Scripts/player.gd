@@ -12,8 +12,9 @@ var maxHP := 10
 var currHP := maxHP
 var invincibilityDurationSecs := 1.0
 var currentXP: int = 0
-var xpToLevel: int = 100
+var xpToLevel: int = 10
 var xpPickupRange := 100.0
+var currPlayerLevel = 1
 
 #attack stat multipliers
 var damageMult := 1.0
@@ -22,7 +23,7 @@ var castSpeedMult := 1.0
 var sizeMult := 1.0
 var projectileSpeedMult := 1.0
 var xpMult := 1.0
-var xpToLevelMult := 1.0
+var xpToLevelMult := 1.5
 var xpPickupRangeMult := 1.0
 
 
@@ -87,9 +88,17 @@ func _onMissileReadyToFire(rng):
 	#scan the area in range, select an enemy, and fire at them
 	ReadyForTarget.emit(rng)
 	
+func _checkForAndLevelUp() -> void:
+	if currentXP >= xpToLevel:
+		print("Leveled up!")
+		currentXP = currentXP - xpToLevel
+		xpToLevel = xpToLevel * xpToLevelMult
+		_checkForAndLevelUp() #This is so that multiple levels can be gained at once, if the xp is collected.
+	
 func gainXp(val: int):
 	currentXP += val * xpMult
-	print("total xp: ", currentXP)
+	_checkForAndLevelUp()
+	print("total xp: ", currentXP, " / ", xpToLevel)
 	
 func fireMissile(xLoc, yLoc):
 	missile_manager.createMissile(global_position.x, global_position.y, xLoc, yLoc)

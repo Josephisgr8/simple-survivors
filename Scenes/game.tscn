@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://f68nwvlve2ns" path="res://Scripts/game.gd" id="1_3dryh"]
 [ext_resource type="Texture2D" uid="uid://blg2ry4qt2pt8" path="res://Assets/Background/grass.png" id="1_ebmjs"]
+[ext_resource type="PackedScene" uid="uid://2cd1f5lrg5ur" path="res://Scenes/in_game_ui.tscn" id="2_i6g32"]
 [ext_resource type="PackedScene" uid="uid://6kuajfiixot1" path="res://Scenes/player.tscn" id="2_qxrlw"]
 [ext_resource type="Script" uid="uid://dhsuvly4iy8nt" path="res://Scripts/enemy_manager.gd" id="3_3dryh"]
 [ext_resource type="Script" uid="uid://cs5oxhfleo38f" path="res://Scripts/xp_manager.gd" id="5_wowpa"]
@@ -4140,5 +4141,9 @@ script = ExtResource("5_wowpa")
 
 [node name="XP Orb Combine Wait" type="Timer" parent="XP Manager" unique_id=946376504]
 autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1058480093]
+
+[node name="In_Game_UI" parent="CanvasLayer" unique_id=1934535780 instance=ExtResource("2_i6g32")]
 
 [connection signal="timeout" from="XP Manager/XP Orb Combine Wait" to="XP Manager" method="_on_xp_orb_combine_wait_timeout"]

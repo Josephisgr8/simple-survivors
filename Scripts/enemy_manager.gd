@@ -5,11 +5,14 @@ const EnemyBlueprint: PackedScene = preload("res://Scenes/enemy.tscn")
 signal ReadyToUpdateEnemiesWithPlayerPos()
 signal PlayerIsBeingHit()
 signal EnemyDied()
+signal EnemyDifficultyIncreaseTimerSecs(secs)
 
 var enemyList: Array[Area2D]
 var maxEnemies := 5
 var enemyRespawnTimeSecs := 1.0
 var enemyPushoffForce := 3
+var enemyDifficultyIncreaseTimerSecs := 3
+var enemyDifficultyIncreaseScale := 0.05
 var spawnGroundsX: Vector2i = Vector2i(0, 2016)
 var spawnGroundsY: Vector2i = Vector2i(0, 2016)
 
@@ -27,10 +30,15 @@ var enemyDamageMultiplier := 1.0
 var enemyMaxHealthMult := 1.0
 var xpValueMult := 1.0
 
+
 @onready var enemySpawnTimer: Timer = $EnemySpawnTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if is_instance_valid(GameTimerAutoload):
+		EnemyDifficultyIncreaseTimerSecs.connect(GameTimerAutoload.onEnemyDifficultyIncreaseTimerSecs)
+		GameTimerAutoload.EnemyDifficultyIncreaseTimeElapsed.connect(_onEnemyDifficultyIncreaseTimeElapsed)
+	EnemyDifficultyIncreaseTimerSecs.emit(enemyDifficultyIncreaseTimerSecs)
 	pass # Replace with function body.
 
 
@@ -57,25 +65,16 @@ func updateEnemyList(pos) -> void:
 				pushOffset += pushDirection * (overlapAmountPercent * minDistance)
 		enemy.updatePushOffset(pushOffset)
 		
-func _checkForAndSpawnEnemy():
-	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
-		#create new enemy and set stats
-		var newEnemy = EnemyBlueprint.instantiate()
-		newEnemy.global_position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
-		newEnemy.global_scale = Vector2(enemySizeScale, enemySizeScale)
-		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult, xpValue * xpValueMult)
-		
-		#add enemy to list and start timer for next enemy
-		enemyList.append(newEnemy)
-		add_child(newEnemy)
-		enemySpawnTimer.start(enemyRespawnTimeSecs)
-		
-		#set signal up for new enemy if it has this signal (extra if statement is for potential crashes in the future)
-		if newEnemy.has_signal("_enemyHittingPLayer"):
-			newEnemy.HittingPlayer.connect(_enemyHittingPLayer)
-		if newEnemy.has_signal("EnemyDied"):
-			newEnemy.EnemyDied.connect(_onEnemyDied)
-			
+func _onEnemyDifficultyIncreaseTimeElapsed():
+	print(enemySizeScale, enemySpeedMultiplier, enemyDamageMultiplier, enemyMaxHealthMult, xpValueMult)
+	
+	enemySizeScale += (enemySizeScale * enemyDifficultyIncreaseScale)
+	enemySpeedMultiplier += (enemySpeedMultiplier * enemyDifficultyIncreaseScale)
+	enemyDamageMultiplier += (enemyDamageMultiplier * enemyDifficultyIncreaseScale)
+	enemyMaxHealthMult += (enemyMaxHealthMult * enemyDifficultyIncreaseScale)
+	xpValueMult += (xpValueMult * enemyDifficultyIncreaseScale)
+	
+	print(enemySizeScale, enemySpeedMultiplier, enemyDamageMultiplier, enemyMaxHealthMult, xpValueMult)
 
 func findEnemyNearestPlayer(position, rng):
 	#loop through enemies and find shortest distance that is also in given range
@@ -104,3 +103,22 @@ func _onEnemyDied(enemy):
 	EnemyDied.emit(enemy.global_position, enemy.xpValue)
 	enemyList.erase(enemy)
 	enemy.queue_free()
+	
+func _checkForAndSpawnEnemy():
+	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
+		#create new enemy and set stats
+		var newEnemy = EnemyBlueprint.instantiate()
+		newEnemy.global_position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
+		newEnemy.global_scale = Vector2(enemySizeScale, enemySizeScale)
+		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult, xpValue * xpValueMult)
+		
+		#add enemy to list and start timer for next enemy
+		enemyList.append(newEnemy)
+		add_child(newEnemy)
+		enemySpawnTimer.start(enemyRespawnTimeSecs)
+		
+		#set signal up for new enemy if it has this signal (extra if statement is for potential crashes in the future)
+		if newEnemy.has_signal("_enemyHittingPLayer"):
+			newEnemy.HittingPlayer.connect(_enemyHittingPLayer)
+		if newEnemy.has_signal("EnemyDied"):
+			newEnemy.EnemyDied.connect(_onEnemyDied)

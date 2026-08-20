@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://2cd1f5lrg5ur"]
+
+[ext_resource type="Script" uid="uid://bvybrhj3x2x16" path="res://Scripts/in_game_ui.gd" id="1_5x6se"]
+
+[node name="In_Game_UI" type="Control" unique_id=1934535780]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_5x6se")
+
+[node name="HealthLabel" type="Label" parent="." unique_id=1979079318]
+layout_mode = 0
+offset_right = 61.0
+offset_bottom = 23.0
+text = "Health: "

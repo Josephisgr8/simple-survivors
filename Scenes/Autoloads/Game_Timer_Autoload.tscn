@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bsxyb67x8qufs"]
+
+[ext_resource type="Script" uid="uid://b7lwkd6fkler2" path="res://Scripts/Autoloads/Game_Timer_Autoload.gd" id="1_xc4ho"]
+
+[node name="GameTimerAutoload" type="Node" unique_id=1147591254]
+script = ExtResource("1_xc4ho")
