@@ -57,11 +57,7 @@ func _removeXpOrbs():
 		orb.queue_free()
 	xpOrbList = xpOrbList.filter(func(orb: XP_Orb): return is_instance_valid(orb) and not orb.is_queued_for_deletion())
 	xpOrbsToDelete.clear()
-		#xpOrbList.erase(orb) #CAN CAUSE BOTTLENECK IF MANY ORBS PRESENT. SWITCH TO HASHMAP DELETION IF NECESSARY.
-		#xpOrbsToDelete.erase(orb) #CAN CAUSE BOTTLENECK IF MANY ORBS PRESENT. SWITCH TO HASHMAP DELETION IF NECESSARY.
-		#if is_instance_valid(orb):
-			#orb.queue_free()
-		
+
 func _mergeOrbs(orb1: XP_Orb, orb2: XP_Orb):
 	orb1.xpValue += orb2.xpValue
 	orb1.resize(xpOrbBaseScale, xpOrbGrowthFactor)

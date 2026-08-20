@@ -14,7 +14,8 @@ var invincibilityDurationSecs := 1.0
 var currentXP: int = 0
 var xpToLevel: int = 10
 var xpPickupRange := 100.0
-var currPlayerLevel = 1
+var currPlayerLevel: int = 1
+var antiSpawnRadius: float = 400
 
 #attack stat multipliers
 var damageMult := 1.0
@@ -48,25 +49,6 @@ func _process(delta: float) -> void:
 	var movementDirection = Input.get_vector("Left", "Right", "Up", "Down")
 	player_state_manager.move(movementDirection)
 	
-	#old movement
-	
-	#var xdirection := Input.get_axis("Left", "Right")
-	#
-	#if xdirection:
-		#
-		##velocity.x = direction * speed
-		#position.x += xdirection * speed * speedMultiplier * delta
-		#print(global_position)
-	#else:
-		#position.x -= xdirection * speed * speedMultiplier * delta
-		#
-	#
-	#var ydirection := Input.get_axis("Up", "Down")
-	#if ydirection:
-		##velocity.x = direction * speed
-		#position.y += ydirection * speed * delta
-	#else:
-		#position.y -= ydirection * speed * delta
 
 func was_hit(hitBy: Node, dmg: int) -> void:
 	if (!isInvincible):

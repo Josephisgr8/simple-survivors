@@ -35,7 +35,7 @@ func _onReadyForTarget(rng):
 		player.fireMissile(closestEnemy.x, closestEnemy.y)
 
 func _onReadyToUpdateEnemiesWithPlayerPos():
-	enemyManager.updateEnemyList(player.global_position)
+	enemyManager.updateEnemyList(player.global_position, player.antiSpawnRadius)
 	
 func _onPlayerIsBeingHit(src, dmg):
 	player.wasHit(src, dmg)

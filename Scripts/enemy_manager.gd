@@ -10,8 +10,11 @@ signal EnemyDifficultyIncreaseTimerSecs(secs)
 var enemyList: Array[Area2D]
 var maxEnemies := 5
 var enemyRespawnTimeSecs := 1.0
+var nonSpawnPositions: Dictionary[Vector2, float]
+var spawnPositionMaxDist: float = 1000
+var maxNumberOfEnemySpawnAttempts = 5
 var enemyPushoffForce := 3
-var enemyDifficultyIncreaseTimerSecs := 3
+var enemyDifficultyIncreaseTimerSecs := 10.0
 var enemyDifficultyIncreaseScale := 0.05
 var spawnGroundsX: Vector2i = Vector2i(0, 2016)
 var spawnGroundsY: Vector2i = Vector2i(0, 2016)
@@ -48,7 +51,10 @@ func _process(delta: float) -> void:
 
 
 #for telling each enemy the player's position
-func updateEnemyList(pos) -> void:
+func updateEnemyList(pos: Vector2, rad: float) -> void:
+	#update nonspawnlocation so enemied dont spawn near player
+	nonSpawnPositions.clear()
+	nonSpawnPositions[pos] = rad * rad
 	for enemy in enemyList:
 		enemy.updatePlayerPos(pos)
 		#also get and set push vector
@@ -66,7 +72,6 @@ func updateEnemyList(pos) -> void:
 		enemy.updatePushOffset(pushOffset)
 		
 func _onEnemyDifficultyIncreaseTimeElapsed():
-	print(enemySizeScale, enemySpeedMultiplier, enemyDamageMultiplier, enemyMaxHealthMult, xpValueMult)
 	
 	enemySizeScale += (enemySizeScale * enemyDifficultyIncreaseScale)
 	enemySpeedMultiplier += (enemySpeedMultiplier * enemyDifficultyIncreaseScale)
@@ -74,7 +79,6 @@ func _onEnemyDifficultyIncreaseTimeElapsed():
 	enemyMaxHealthMult += (enemyMaxHealthMult * enemyDifficultyIncreaseScale)
 	xpValueMult += (xpValueMult * enemyDifficultyIncreaseScale)
 	
-	print(enemySizeScale, enemySpeedMultiplier, enemyDamageMultiplier, enemyMaxHealthMult, xpValueMult)
 
 func findEnemyNearestPlayer(position, rng):
 	#loop through enemies and find shortest distance that is also in given range
@@ -103,12 +107,35 @@ func _onEnemyDied(enemy):
 	EnemyDied.emit(enemy.global_position, enemy.xpValue)
 	enemyList.erase(enemy)
 	enemy.queue_free()
+
+func _isPositionSpawnable(pos: Vector2) -> bool:
+	for position in nonSpawnPositions:
+		if pos.distance_squared_to(position) < nonSpawnPositions[position]:
+			return false
+	return true
+
+func _getValidSpawnPosition(attempts: int):
+	for i in range(attempts):
+			#pick a random spawnAnchor
+			var spawnAnchorPosition: Vector2 = nonSpawnPositions.keys()[randi_range(0, nonSpawnPositions.size()-1)]
+			#pick random angle/dist from spawnAnchor and set as position
+			var angleFromSpawnAnchor: float = randf() * 2 * PI
+			var distSqurFromSpawnAnchor: float = randf_range(nonSpawnPositions[spawnAnchorPosition], spawnPositionMaxDist * spawnPositionMaxDist)
+			var newEnemyPosition: Vector2 = spawnAnchorPosition + (Vector2.from_angle(angleFromSpawnAnchor) * sqrt(distSqurFromSpawnAnchor))
+			#check if valid
+			if _isPositionSpawnable(newEnemyPosition):
+				return newEnemyPosition
+	return null
 	
 func _checkForAndSpawnEnemy():
 	if (enemyList.size() < maxEnemies) && (enemySpawnTimer.is_stopped()):
 		#create new enemy and set stats
-		var newEnemy = EnemyBlueprint.instantiate()
-		newEnemy.global_position = Vector2i(randi_range(spawnGroundsX.x, spawnGroundsX.y), randi_range(spawnGroundsY.x, spawnGroundsY.y))
+		var newEnemy: Enemy = EnemyBlueprint.instantiate()
+		var newEnemyPosition: Variant = _getValidSpawnPosition(maxNumberOfEnemySpawnAttempts)
+		if (newEnemyPosition == null):
+			return
+		
+		newEnemy.global_position = newEnemyPosition
 		newEnemy.global_scale = Vector2(enemySizeScale, enemySizeScale)
 		newEnemy.setStats(enemySpeed * enemySpeedMultiplier, enemyDamage * enemyDamageMultiplier, enemyMaxHealth * enemyMaxHealthMult, xpValue * xpValueMult)
 		
