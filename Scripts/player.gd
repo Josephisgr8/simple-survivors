@@ -5,32 +5,12 @@ class_name Player
 signal ReadyForTarget(range)
 
 
-#character stats
-var speed := 200.0
-var speedMultiplier := 1.0
-var maxHP := 10
-var currHP := maxHP
-var invincibilityDurationSecs := 1.0
-var currentXP: int = 0
-var xpToLevel: int = 10
-var xpPickupRange := 100.0
-var currPlayerLevel: int = 1
-var antiSpawnRadius: float = 400
-
-#attack stat multipliers
-var damageMult := 1.0
-var rangeMult := 1.0
-var castSpeedMult := 1.0
-var sizeMult := 1.0
-var projectileSpeedMult := 1.0
-var xpMult := 1.0
-var xpToLevelMult := 1.5
-var xpPickupRangeMult := 1.0
+#character stats import
+@export var playerStats: PlayerStatsResource
 
 
 #player flags
 var isInvincible := false
-
 
 
 @onready var invTimer: Timer = $invincibilityTimer
@@ -50,13 +30,11 @@ func _process(delta: float) -> void:
 	player_state_manager.move(movementDirection)
 	
 
-func was_hit(hitBy: Node, dmg: int) -> void:
+func wasHit(hitBy: Node, dmg: int) -> void:
 	if (!isInvincible):
-		currHP -= dmg
-		print("player was hit, ", currHP, " HP remaining")
+		playerStats.currHP -= dmg
 		isInvincible = true
-		invTimer.start(invincibilityDurationSecs)
-	
+		invTimer.start(playerStats.invincibilityDurationSecs)
 
 
 func _on_invincibility_timer_timeout() -> void:
@@ -64,23 +42,41 @@ func _on_invincibility_timer_timeout() -> void:
 	
 #missile methods
 func _updateMissileManager() -> void:
-	missile_manager.updateVariables(projectileSpeedMult, castSpeedMult, damageMult, rangeMult, sizeMult)
+	missile_manager.updateVariables(playerStats.projectileSpeedMult, playerStats.castSpeedMult, playerStats.damageMult, playerStats.rangeMult, playerStats.sizeMult)
 	
 func _onMissileReadyToFire(rng):
 	#scan the area in range, select an enemy, and fire at them
 	ReadyForTarget.emit(rng)
 	
 func _checkForAndLevelUp() -> void:
-	if currentXP >= xpToLevel:
+	if playerStats.currentXP >= playerStats.xpToLevel:
 		print("Leveled up!")
-		currentXP = currentXP - xpToLevel
-		xpToLevel = xpToLevel * xpToLevelMult
+		playerStats.currentXP = playerStats.currentXP - playerStats.xpToLevel
+		playerStats.xpToLevel = playerStats.xpToLevel * playerStats.xpToLevelMult
 		_checkForAndLevelUp() #This is so that multiple levels can be gained at once, if the xp is collected.
 	
 func gainXp(val: int):
-	currentXP += val * xpMult
+	playerStats.currentXP += val * playerStats.xpMult
 	_checkForAndLevelUp()
-	print("total xp: ", currentXP, " / ", xpToLevel)
+	print("total xp: ", playerStats.currentXP, " / ", playerStats.xpToLevel)
 	
-func fireMissile(xLoc, yLoc):
-	missile_manager.createMissile(global_position.x, global_position.y, xLoc, yLoc)
+func fireMissile(pos: Vector2):
+	missile_manager.createMissile(global_position, pos)
+
+
+#GETTERS AND SETTERS AS NEEDED
+
+func getXpPickupRange() -> float:
+	return playerStats.xpPickupRange
+	
+func getXpPickupRangeMult() -> float:
+	return playerStats.xpPickupRangeMult
+	
+func getAntiSpawnRadius() -> float:
+	return playerStats.antiSpawnRadius
+
+func getSpeed() -> float:
+	return playerStats.speed
+	
+func getSpeedMult() -> float:
+	return playerStats.speedMultiplier

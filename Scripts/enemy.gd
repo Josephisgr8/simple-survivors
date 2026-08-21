@@ -15,7 +15,7 @@ var enemyCurrentHealth: int
 var xpValue: float
 
 #vars
-var playerPos: Vector2
+var targetPosition: Vector2
 var pushOffset: Vector2
 
 @onready var collisionShape: CollisionShape2D = $CollisionShape2D
@@ -26,17 +26,17 @@ var pushOffset: Vector2
 func _process(delta: float) -> void:
 	#move
 	var currPos = Vector2(global_position.x, global_position.y)
-	var targetPos: Vector2 = playerPos + (pushOffset * pushForce)
+	var targetPos: Vector2 = targetPosition + (pushOffset * pushForce)
 	global_position = currPos.move_toward(targetPos, enemySpeed * delta)
 	
 	#check if overlapping
-	var overlappingAreas = get_overlapping_areas()
+	var overlappingAreas = get_overlapping_bodies()
 	for area in overlappingAreas:
-		if area.name == "Player":
+		if area is Player:
 			HittingPlayer.emit(self, enemyDamage)
 
-func updatePlayerPos(pos): #gets called every frame
-	playerPos = pos
+func updateTargetPosition(pos): #gets called every frame
+	targetPosition = pos
 	
 func updatePushOffset(offset: Vector2):
 	pushOffset = offset

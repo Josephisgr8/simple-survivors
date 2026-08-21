@@ -20,7 +20,7 @@ position = Vector2(-7.6250305, 28.625015)
 scale = Vector2(0.5001516, 0.5283069)
 texture = ExtResource("2_6t5aa")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=147984277]
+[node name="PlayerCollision" type="CollisionShape2D" parent="." unique_id=147984277]
 position = Vector2(-0.62503004, 0.62501526)
 shape = SubResource("CapsuleShape2D_gn4dx")
 

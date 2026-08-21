@@ -9,8 +9,8 @@ const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 
 #missile base stats
 var projectileSpeed := 350.0
-var castSpeed := 0.2
-var projectileDamage := 5
+var castSpeed := 1.5
+var projectileDamage := 2
 var castRange := 450.0
 var penetrationValue := 1
 
@@ -44,12 +44,12 @@ func _process(delta: float) -> void:
 	pass
 
 
-func createMissile(xFromLoc, yFromLoc, xToLoc, yToLoc) -> void:
+func createMissile(fromPos: Vector2, toPos: Vector2) -> void:
 	var newMissile = MissileBlueprint.instantiate()
 	
 	#set var values and add missile to list
-	newMissile.global_position = Vector2(xFromLoc, yFromLoc)
-	newMissile.look_at(Vector2(xToLoc,yToLoc))
+	newMissile.global_position = fromPos
+	newMissile.look_at(toPos)
 	newMissile.global_scale = newMissile.global_scale * sizeMult
 	newMissile.penetrationValue = penetrationValue * penetrationValueMult
 	missileList.append(newMissile)

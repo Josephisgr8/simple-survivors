@@ -12,8 +12,7 @@ var xpOrbList: Array[Sprite2D]
 var xpOrbsToDelete: Array[Sprite2D]
 
 
-var playerPosition: Vector2 # It ends up being better for this node to hold this data, since orbs need it for the magnetized effect
-var playerPickupRange: float
+var collectorPosition: Vector2 # It ends up being better for this node to hold this data, since orbs need it for the magnetized effect
 
 #var xpOrbCombinationValue := 5
 var xpOrbBaseScale := 2.0
@@ -23,6 +22,7 @@ var xpOrbCombineWaitSecs := 2.0
 
 @onready var xp_orb_combine_wait: Timer = $"XP Orb Combine Wait"
 
+@export var collectorStats: PlayerStatsResource
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,7 +33,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_removeXpOrbs()
-	getXpOrbsInRange(playerPosition, playerPickupRange)
+	getXpOrbsInRange(collectorPosition, collectorStats.xpPickupRange * collectorStats.xpPickupRangeMult)
 	pass
 
 func spawnXP(pos, val):
@@ -141,6 +141,5 @@ func _awardXp(orb: XP_Orb):
 	XP_Absorbed.emit(orb.xpValue)
 
 
-func updatePlayerInfo(pos: Vector2, rng: float):
-	playerPosition = pos
-	playerPickupRange = rng
+func updateCollectorPosition(pos: Vector2):
+	collectorPosition = pos

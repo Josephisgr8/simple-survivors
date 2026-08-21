@@ -1,8 +1,9 @@
 extends Node
+class_name EnemyManager
+
 const EnemyBlueprint: PackedScene = preload("res://Scenes/enemy.tscn")
 
 #signals
-signal ReadyToUpdateEnemiesWithPlayerPos()
 signal PlayerIsBeingHit()
 signal EnemyDied()
 signal EnemyDifficultyIncreaseTimerSecs(secs)
@@ -36,6 +37,9 @@ var xpValueMult := 1.0
 
 @onready var enemySpawnTimer: Timer = $EnemySpawnTimer
 
+@export var targetStats: PlayerStatsResource
+var targetPosition: Vector2 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if is_instance_valid(GameTimerAutoload):
@@ -46,17 +50,17 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	ReadyToUpdateEnemiesWithPlayerPos.emit()
 	_checkForAndSpawnEnemy()
+	updateEnemyList()
 
 
 #for telling each enemy the player's position
-func updateEnemyList(pos: Vector2, rad: float) -> void:
+func updateEnemyList() -> void:
 	#update nonspawnlocation so enemied dont spawn near player
 	nonSpawnPositions.clear()
-	nonSpawnPositions[pos] = rad * rad
+	nonSpawnPositions[targetPosition] = targetStats.antiSpawnRadius * targetStats.antiSpawnRadius
 	for enemy in enemyList:
-		enemy.updatePlayerPos(pos)
+		enemy.updateTargetPosition(targetPosition)
 		#also get and set push vector
 		var pushOffset: Vector2 = Vector2(0,0)
 		var scaledRadius: float = enemy.collisionShape.shape.radius * enemySizeScale
@@ -80,19 +84,19 @@ func _onEnemyDifficultyIncreaseTimeElapsed():
 	xpValueMult += (xpValueMult * enemyDifficultyIncreaseScale)
 	
 
-func findEnemyNearestPlayer(position, rng):
+func findEnemyNearestTarget(rng):
 	#loop through enemies and find shortest distance that is also in given range
 	var closestEnemy = null
 	#for each enemy alive
 	for i in range(0, enemyList.size()):
-		var currEnemyDist = enemyList.get(i).global_position.distance_to(position)
+		var currEnemyDist = enemyList.get(i).global_position.distance_to(targetPosition)
 		#if they are within range
 		if  currEnemyDist <= rng:
 			#set first enemy within range
 			if closestEnemy == null:
 				closestEnemy= enemyList.get(i)
 			#else, check if they are closer, and if so assign them as closest
-			elif currEnemyDist < closestEnemy.global_position.distance_to(position):
+			elif currEnemyDist < closestEnemy.global_position.distance_to(targetPosition):
 				closestEnemy = enemyList.get(i)
 	if (closestEnemy != null):
 		return closestEnemy.global_position
@@ -117,6 +121,7 @@ func _isPositionSpawnable(pos: Vector2) -> bool:
 func _getValidSpawnPosition(attempts: int):
 	for i in range(attempts):
 			#pick a random spawnAnchor
+			if nonSpawnPositions.is_empty(): return null
 			var spawnAnchorPosition: Vector2 = nonSpawnPositions.keys()[randi_range(0, nonSpawnPositions.size()-1)]
 			#pick random angle/dist from spawnAnchor and set as position
 			var angleFromSpawnAnchor: float = randf() * 2 * PI
@@ -145,7 +150,10 @@ func _checkForAndSpawnEnemy():
 		enemySpawnTimer.start(enemyRespawnTimeSecs)
 		
 		#set signal up for new enemy if it has this signal (extra if statement is for potential crashes in the future)
-		if newEnemy.has_signal("_enemyHittingPLayer"):
+		if newEnemy.has_signal("HittingPlayer"):
 			newEnemy.HittingPlayer.connect(_enemyHittingPLayer)
 		if newEnemy.has_signal("EnemyDied"):
 			newEnemy.EnemyDied.connect(_onEnemyDied)
+			
+func updateTargetPosition(pos: Vector2):
+	targetPosition = pos

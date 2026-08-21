@@ -5,7 +5,7 @@ var mapSize := 2016
 
 
 @onready var player: Player = %Player
-@onready var enemyManager: Node = %"Enemy Manager"
+@onready var enemyManager: EnemyManager = %"Enemy Manager"
 @onready var xpmanager: XP_Manager = $"XP Manager"
 @onready var background: TileMapLayer = $Background
 
@@ -13,7 +13,6 @@ var mapSize := 2016
 func _ready() -> void:
 	player.ReadyForTarget.connect(_onReadyForTarget)
 	
-	enemyManager.ReadyToUpdateEnemiesWithPlayerPos.connect(_onReadyToUpdateEnemiesWithPlayerPos)
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
 	
@@ -22,23 +21,24 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	xpmanager.updatePlayerInfo(player.global_position, player.xpPickupRange * player.xpPickupRangeMult)
+	_updateManagers(player.global_position)
 	pass
 
 
 func _onReadyForTarget(rng):
 	#find loc of enemy nearest the player
-	var closestEnemy = enemyManager.findEnemyNearestPlayer(player.global_position, rng)
+	var closestEnemy = enemyManager.findEnemyNearestTarget(rng)
 	if closestEnemy == null:
-		player.fireMissile(player.global_position.x, player.global_position.y)
+		player.fireMissile(player.global_position)
 	else:
-		player.fireMissile(closestEnemy.x, closestEnemy.y)
-
-func _onReadyToUpdateEnemiesWithPlayerPos():
-	enemyManager.updateEnemyList(player.global_position, player.antiSpawnRadius)
+		player.fireMissile(closestEnemy)
 	
 func _onPlayerIsBeingHit(src, dmg):
 	player.wasHit(src, dmg)
 	
 func _onEnemyDied(pos, xpval):
 	xpmanager.spawnXP(pos, xpval)
+
+func _updateManagers(pos: Vector2):
+	xpmanager.updateCollectorPosition(pos)
+	enemyManager.updateTargetPosition(pos)
