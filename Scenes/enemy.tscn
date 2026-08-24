@@ -7,6 +7,17 @@
 radius = 99.0
 height = 198.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_afpow"]
+bg_color = Color(0.060530342, 0.060530365, 0.060530297, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1f0kj"]
+bg_color = Color(0.87038714, 1.4439225e-06, 1.2513996e-06, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
+
 [node name="Enemy" type="Area2D" unique_id=563158874]
 collision_layer = 3
 script = ExtResource("1_1f0kj")
@@ -20,3 +31,14 @@ texture = ExtResource("1_hghv2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2127674872]
 position = Vector2(0.5, -0.5)
 shape = SubResource("CapsuleShape2D_nhhn2")
+debug_color = Color(0.34901962, 0.6156863, 0.23921569, 0.8235294)
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=2117521927]
+offset_left = -96.0
+offset_top = -128.0
+offset_right = 96.0
+offset_bottom = -112.0
+theme_override_colors/font_color = Color(0.9685872, 5.679429e-06, 7.70092e-07, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_afpow")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1f0kj")
+show_percentage = false

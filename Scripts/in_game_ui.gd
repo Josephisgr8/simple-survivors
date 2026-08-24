@@ -4,10 +4,14 @@ extends Control
 
 @onready var in_game_ui: Control = $"."
 @onready var health_label: Label = $HealthLabel
+@onready var xp_label: Label = $XpLabel
+@onready var player_level_label: Label = $PlayerLevelLabel
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	playerStats.CurrentHPUpdated.connect(_updateHUD)
+	playerStats.HpUpdated.connect(_updateHUD)
+	playerStats.XpUpdated.connect(_updateHUD)
+	playerStats.PlayerLevelUpdated.connect(_updateHUD)
 	_updateHUD()
 	pass # Replace with function body.
 
@@ -18,3 +22,5 @@ func _process(delta: float) -> void:
 
 func _updateHUD() -> void:
 	health_label.text = str("Health: ", playerStats.currHP, "/", playerStats.maxHP) 
+	xp_label.text = str("XP: ", playerStats.currentXP, "/", playerStats.xpToLevel)
+	player_level_label.text = str("Level: ", playerStats.currPlayerLevel)

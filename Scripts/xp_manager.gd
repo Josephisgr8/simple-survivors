@@ -8,8 +8,9 @@ signal XP_Absorbed
 
 
 
-var xpOrbList: Array[Sprite2D]
-var xpOrbsToDelete: Array[Sprite2D]
+var xpOrbList: Array[XP_Orb]
+var xpMagentizedOrbsList: Array[XP_Orb]
+var xpOrbsToDelete: Array[XP_Orb]
 
 
 var collectorPosition: Vector2 # It ends up being better for this node to hold this data, since orbs need it for the magnetized effect
@@ -19,6 +20,7 @@ var xpOrbBaseScale := 2.0
 var xpOrbCombinationRange := 100
 var xpOrbGrowthFactor := 0.05 #how much an xp orb will scale in size per xpValue it is
 var xpOrbCombineWaitSecs := 2.0
+var xpMagentizedMovementSpeed := 500.0
 
 @onready var xp_orb_combine_wait: Timer = $"XP Orb Combine Wait"
 
@@ -32,8 +34,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	_updateMagnetizedOrbs(delta)
 	_removeXpOrbs()
-	getXpOrbsInRange(collectorPosition, collectorStats.xpPickupRange * collectorStats.xpPickupRangeMult)
+	getXpOrbsInRange(collectorStats.xpPickupRange * collectorStats.xpPickupRangeMult)
 	pass
 
 func spawnXP(pos, val):
@@ -47,21 +50,28 @@ func _createXpOrb(pos, val):
 		newXp.resize(xpOrbBaseScale, xpOrbGrowthFactor)
 		newXp.global_scale = Vector2(xpOrbBaseScale, xpOrbBaseScale)
 		newXp.xpValue = val
-		newXp.DeleteOrb.connect(func(orb: XP_Orb): xpOrbsToDelete.append(orb)) # lambda function, very fancy. Way to create quick functions on the fly, usually for a specific call.
 		xpOrbList.append(newXp)
 		add_child(newXp)
 	pass
 
 func _removeXpOrbs():
-	for orb in xpOrbsToDelete:
+	for orb: XP_Orb in xpOrbsToDelete:
 		orb.queue_free()
-	xpOrbList = xpOrbList.filter(func(orb: XP_Orb): return is_instance_valid(orb) and not orb.is_queued_for_deletion())
 	xpOrbsToDelete.clear()
 
 func _mergeOrbs(orb1: XP_Orb, orb2: XP_Orb):
 	orb1.xpValue += orb2.xpValue
 	orb1.resize(xpOrbBaseScale, xpOrbGrowthFactor)
 	xpOrbsToDelete.append(orb2)
+	
+func _updateMagnetizedOrbs(delta: float) -> void:
+	for orb in xpMagentizedOrbsList:
+		orb.global_position = orb.global_position.move_toward(collectorPosition, xpMagentizedMovementSpeed * delta)
+		if orb.global_position == collectorPosition:
+			_awardXp(orb)
+			xpOrbsToDelete.append(orb)
+	xpMagentizedOrbsList = xpMagentizedOrbsList.filter(func(orb: XP_Orb): return !xpOrbsToDelete.has(orb))
+	pass
 
 func getUpdatedXpOrbHashMap(cellSize: float) -> Dictionary:
 	var hashMap: Dictionary
@@ -110,12 +120,12 @@ func _on_xp_orb_combine_wait_timeout() -> void:
 							break
 
 
-func getXpOrbsInRange(pos: Vector2, rng: float) -> void:
+func getXpOrbsInRange(rng: float) -> void:
 	var rangeSquared = rng * rng #for performance reasons
 	
 	#determine the cell range to check
-	var cellBoundLower: Vector2i = Vector2i(floori((pos.x - rng)/xpOrbCombinationRange), floori((pos.y - rng)/xpOrbCombinationRange))
-	var cellBoundUpper: Vector2i = Vector2i(floori((pos.x + rng)/xpOrbCombinationRange), floori((pos.y + rng)/xpOrbCombinationRange))
+	var cellBoundLower: Vector2i = Vector2i(floori((collectorPosition.x - rng)/xpOrbCombinationRange), floori((collectorPosition.y - rng)/xpOrbCombinationRange))
+	var cellBoundUpper: Vector2i = Vector2i(floori((collectorPosition.x + rng)/xpOrbCombinationRange), floori((collectorPosition.y + rng)/xpOrbCombinationRange))
 	
 	#get updated hashmap
 	var hashMap: Dictionary = getUpdatedXpOrbHashMap(xpOrbCombinationRange)
@@ -128,13 +138,11 @@ func getXpOrbsInRange(pos: Vector2, rng: float) -> void:
 			if !hashMap.has(currCell):
 				continue
 			for orb: XP_Orb in hashMap[currCell]:
-				if orb.global_position.distance_squared_to(pos) <= rangeSquared:
+				if orb.global_position.distance_squared_to(collectorPosition) <= rangeSquared:
 					#if xp is in range
-					_awardXp(orb)
-					orb.deleteOrb()
-	#THIS FUNCTION WILL SEND THE ORBS TO MAGNET MODE, CONTROLLED BY THIS MANAGER. SINCE IT HAS CONTROLL, IT KNOWS WHEN THE XP REACHES THE PLAYER. AT THAT POINT IT WILL DELETE THEE XP, 
-	# AND EMIT A SIGNAL TO LET THE PLAYER KNOW HOW MUCH RAW XP THEY GOT
-	#ONCE THE ORBS REACH THE PLAYER, DO THIS^^^ THEN DELETE THEM
+					#remove the orb from the orb list, add it to the magnetizedOrbList
+					xpOrbList.erase(orb)
+					xpMagentizedOrbsList.append(orb)
 	
 
 func _awardXp(orb: XP_Orb):

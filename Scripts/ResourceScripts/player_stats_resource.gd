@@ -2,8 +2,9 @@ extends Resource
 class_name PlayerStatsResource
 
 #HUD signals
-signal CurrentHPUpdated
-signal MaxHPUpdated
+signal HpUpdated
+signal XpUpdated
+signal PlayerLevelUpdated
 
 #player stats
 @export var speed := 200.0:
@@ -17,13 +18,12 @@ signal MaxHPUpdated
 @export var maxHP := 10:
 	set(value):
 		maxHP = value
-		MaxHPUpdated.emit()
+		HpUpdated.emit()
 		
 @export var currHP := maxHP:
 	set(value):
 		currHP = value
-		CurrentHPUpdated.emit()
-		print("curr hp modified")
+		HpUpdated.emit()
 		
 @export var invincibilityDurationSecs := 1.0:
 	set(value):
@@ -32,10 +32,12 @@ signal MaxHPUpdated
 @export var currentXP: int = 0:
 	set(value):
 		currentXP = value
+		XpUpdated.emit()
 		
 @export var xpToLevel: int = 10:
 	set(value):
 		xpToLevel = value
+		XpUpdated.emit()
 		
 @export var xpPickupRange := 100.0:
 	set(value):
@@ -44,6 +46,7 @@ signal MaxHPUpdated
 @export var currPlayerLevel: int = 1:
 	set(value):
 		currPlayerLevel = value
+		PlayerLevelUpdated.emit()
 		
 @export var antiSpawnRadius: float = 400:
 	set(value):

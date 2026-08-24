@@ -61,9 +61,10 @@ func updateEnemyList() -> void:
 	nonSpawnPositions[targetPosition] = targetStats.antiSpawnRadius * targetStats.antiSpawnRadius
 	for enemy in enemyList:
 		enemy.updateTargetPosition(targetPosition)
+		enemy.updateHealthBar()
 		#also get and set push vector
 		var pushOffset: Vector2 = Vector2(0,0)
-		var scaledRadius: float = enemy.collisionShape.shape.radius * enemySizeScale
+		var scaledRadius: float = enemy.collisionShape.shape.radius * enemy.scale.x
 		var minDistance: float = scaledRadius * enemyPushoffForce
 		for enemy2 in enemyList:
 			if enemy == enemy2:

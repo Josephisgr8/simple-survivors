@@ -9,6 +9,27 @@ script = ExtResource("1_5x6se")
 
 [node name="HealthLabel" type="Label" parent="." unique_id=1979079318]
 layout_mode = 0
-offset_right = 61.0
-offset_bottom = 23.0
+offset_right = 128.0
+offset_bottom = 24.0
 text = "Health: "
+
+[node name="XpLabel" type="Label" parent="." unique_id=1195081174]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 504.0
+offset_top = 24.0
+offset_right = 640.0
+offset_bottom = 48.0
+grow_horizontal = 0
+text = "XP: Current / Max"
+horizontal_alignment = 2
+
+[node name="PlayerLevelLabel" type="Label" parent="." unique_id=1402769269]
+layout_mode = 0
+offset_left = 504.0
+offset_right = 640.0
+offset_bottom = 24.0
+text = "Level: "
+horizontal_alignment = 2

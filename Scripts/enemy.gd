@@ -19,9 +19,10 @@ var targetPosition: Vector2
 var pushOffset: Vector2
 
 @onready var collisionShape: CollisionShape2D = $CollisionShape2D
+@onready var health_bar: ProgressBar = $HealthBar
 
-#func _init() -> void:
-
+func _ready() -> void:
+	health_bar.visible = false
 
 func _process(delta: float) -> void:
 	#move
@@ -38,11 +39,16 @@ func _process(delta: float) -> void:
 func updateTargetPosition(pos): #gets called every frame
 	targetPosition = pos
 	
+func updateHealthBar():
+	health_bar.max_value = enemyMaxHealth
+	health_bar.value = enemyCurrentHealth
+
 func updatePushOffset(offset: Vector2):
 	pushOffset = offset
 	
 	
 func damageTaken(dmg, src):
+	health_bar.visible = true
 	enemyCurrentHealth -= dmg
 	if (enemyCurrentHealth <= 0):
 		_enemyDie()

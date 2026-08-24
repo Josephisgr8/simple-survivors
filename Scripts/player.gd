@@ -51,6 +51,7 @@ func _onMissileReadyToFire(rng):
 func _checkForAndLevelUp() -> void:
 	if playerStats.currentXP >= playerStats.xpToLevel:
 		print("Leveled up!")
+		playerStats.currPlayerLevel += 1
 		playerStats.currentXP = playerStats.currentXP - playerStats.xpToLevel
 		playerStats.xpToLevel = playerStats.xpToLevel * playerStats.xpToLevelMult
 		_checkForAndLevelUp() #This is so that multiple levels can be gained at once, if the xp is collected.
@@ -58,7 +59,6 @@ func _checkForAndLevelUp() -> void:
 func gainXp(val: int):
 	playerStats.currentXP += val * playerStats.xpMult
 	_checkForAndLevelUp()
-	print("total xp: ", playerStats.currentXP, " / ", playerStats.xpToLevel)
 	
 func fireMissile(pos: Vector2):
 	missile_manager.createMissile(global_position, pos)
