@@ -9,9 +9,7 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	playerStats.HpUpdated.connect(_updateHUD)
-	playerStats.XpUpdated.connect(_updateHUD)
-	playerStats.PlayerLevelUpdated.connect(_updateHUD)
+	playerStats.PlayerStatUpdated.connect(_updateHUD)
 	_updateHUD()
 	pass # Replace with function body.
 
@@ -21,6 +19,6 @@ func _process(delta: float) -> void:
 	pass
 
 func _updateHUD() -> void:
-	health_label.text = str("Health: ", playerStats.currHP, "/", playerStats.maxHP) 
-	xp_label.text = str("XP: ", playerStats.currentXP, "/", playerStats.xpToLevel)
-	player_level_label.text = str("Level: ", playerStats.currPlayerLevel)
+	health_label.text = str("Health: ", playerStats.getStat("playerCurrentHP"), "/", (ceili(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier"))))
+	xp_label.text = str("XP: ", ceili(playerStats.getStat("playerCurrentXP")), "/", ceili(playerStats.getStat("playerXpToLevel")))
+	player_level_label.text = str("Level: ", playerStats.getStat("playerCurrentLevel"))

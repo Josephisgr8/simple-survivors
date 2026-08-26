@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cquqiq7l3tokj"]
+
+[ext_resource type="Script" uid="uid://c3kktfugjkno0" path="res://Scripts/UIScripts/player_level_up_menu_option.gd" id="1_qa8a3"]
+
+[node name="PlayerLevelUpMenuOption" type="Button" unique_id=1293975263]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_right = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "THIS IS SAMPLE TEXT"
+script = ExtResource("1_qa8a3")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

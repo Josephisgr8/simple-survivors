@@ -51,6 +51,10 @@ Right={
 ]
 }
 
+[layer_names]
+
+2d_render/layer_5="UI Layer"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
 func updateEnemyList() -> void:
 	#update nonspawnlocation so enemied dont spawn near player
 	nonSpawnPositions.clear()
-	nonSpawnPositions[targetPosition] = targetStats.antiSpawnRadius * targetStats.antiSpawnRadius
+	nonSpawnPositions[targetPosition] = targetStats.getStat("playerAntiSpawnRadius") * targetStats.getStat("playerAntiSpawnRadius")
 	for enemy in enemyList:
 		enemy.updateTargetPosition(targetPosition)
 		enemy.updateHealthBar()

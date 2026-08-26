@@ -6,7 +6,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func update(delta):
-	player.global_position += direction * player.getSpeed() * player.getSpeedMult() * delta
+	player.global_position += direction * player.playerStats.getStat("playerSpeed") * player.playerStats.getStat("playerSpeedMultiplier") * delta
 	
 func move(dir):
 	direction = dir

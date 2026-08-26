@@ -36,7 +36,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_updateMagnetizedOrbs(delta)
 	_removeXpOrbs()
-	getXpOrbsInRange(collectorStats.xpPickupRange * collectorStats.xpPickupRangeMult)
+	getXpOrbsInRange(collectorStats.getStat("playerXpPickupRange") * collectorStats.getStat("playerXpPickupRangeMultiplier"))
 	pass
 
 func spawnXP(pos, val):

@@ -8,19 +8,19 @@ var missileList: Array[Area2D]
 const MissileBlueprint: PackedScene = preload("res://Scenes/missile.tscn")
 
 #missile base stats
-var projectileSpeed := 350.0
+var projectileSpeed := 250.0
 var castSpeed := 1.5
 var projectileDamage := 2
 var castRange := 450.0
 var penetrationValue := 1
 
 #missile multipliers
-var projectileSpeedMult := 1.0
-var castSpeedMult := 1.0
-var projectileDamageMult := 1.0
-var rangeMult := 1.0
-var sizeMult := 1.0
-var penetrationValueMult := 1.0
+var projectileSpeedMult : float
+var castSpeedMult : float
+var projectileDamageMult : float
+var rangeMult : float
+var sizeMult : float
+var penetrationValueMult : float
 
 
 @onready var attackTimer: Timer = $MissileAttackTimer

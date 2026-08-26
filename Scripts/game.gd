@@ -3,6 +3,7 @@ extends Node2D
 
 var mapSize := 2016
 
+const PLAYER_LEVEL_UP_MENU = preload("uid://dh61e7rw4y7p4")
 
 @onready var player: Player = %Player
 @onready var enemyManager: EnemyManager = %"Enemy Manager"
@@ -12,6 +13,7 @@ var mapSize := 2016
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player.ReadyForTarget.connect(_onReadyForTarget)
+	player.PlayerLeveledUp.connect(_onPlayerLeveledUp)
 	
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
@@ -32,6 +34,19 @@ func _onReadyForTarget(rng):
 		player.fireMissile(player.global_position)
 	else:
 		player.fireMissile(closestEnemy)
+
+func _onPlayerLeveledUp():
+	Engine.time_scale = 0
+	var playerLevelMenu: PlayerLevelUpMenu = PLAYER_LEVEL_UP_MENU.instantiate()
+	playerLevelMenu.LevelUpChoiceSelected.connect(_onLevelUpSelected)
+	playerLevelMenu.playerStats = player.playerStats
+	playerLevelMenu.addOptions()
+	add_child(playerLevelMenu)
+	playerLevelMenu.show()
+	
+func _onLevelUpSelected():
+	Engine.time_scale = 1.0
+	player.checkForAndLevelUp()
 	
 func _onPlayerIsBeingHit(src, dmg):
 	player.wasHit(src, dmg)
