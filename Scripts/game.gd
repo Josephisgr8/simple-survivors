@@ -14,6 +14,7 @@ const PLAYER_LEVEL_UP_MENU = preload("uid://dh61e7rw4y7p4")
 func _ready() -> void:
 	player.ReadyForTarget.connect(_onReadyForTarget)
 	player.PlayerLeveledUp.connect(_onPlayerLeveledUp)
+	player.PlayerDied.connect(_onPlayerDied)
 	
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
@@ -44,6 +45,9 @@ func _onPlayerLeveledUp():
 	add_child(playerLevelMenu)
 	playerLevelMenu.show()
 	
+func _onPlayerDied() -> void:
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+
 func _onLevelUpSelected():
 	Engine.time_scale = 1.0
 	player.checkForAndLevelUp()

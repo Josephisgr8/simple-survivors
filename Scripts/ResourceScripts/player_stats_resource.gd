@@ -28,18 +28,23 @@ signal PlayerStatUpdated
 	"playerCastSpeedMultiplier": {"value": 1.00, "name": "Cast Speed Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
 	"playerSizeMultiplier": {"value": 1.00, "name": "Size Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
 	"playerProjectileSpeedMultiplier": {"value": 1.00, "name": "Projectile Speed Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
-	"playerXpGainMultiplier": {"value": 20.00, "name": "XP Range Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
+	"playerXpGainMultiplier": {"value": 1.00, "name": "XP Range Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
 	"playerXpPickupRangeMultiplier": {"value": 1.00, "name": "XP Pickup Range Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20}
 	
 }
 
 func setStat(name: String, value):
+	#exception for when maxHP is upgraded
+	if name == "playerMaxHpMultiplier":
+		var maxHpIncrease = (value * playerBaseStats["playerMaxHP"]["value"]) -  (playerBaseStats["playerMaxHP"]["value"] * playerUpgradeableStats["playerMaxHpMultiplier"]["value"])
+		playerBaseStats["playerCurrentHP"]["value"] = maxHpIncrease + playerBaseStats["playerCurrentHp"]["value"]
 	if name in playerBaseStats:
 		playerBaseStats[name]["value"] = value
 		PlayerStatUpdated.emit()
 	elif name in playerUpgradeableStats:
 		playerUpgradeableStats[name]["value"] = value
 		PlayerStatUpdated.emit()
+	
 		
 func getStat(name: String):
 	if name in playerBaseStats:
@@ -48,6 +53,10 @@ func getStat(name: String):
 		return playerUpgradeableStats[name]["value"]
 
 func setStatAt(statInfo: Dictionary, amount):
+	#exception for when maxHP is upgraded
+	if statInfo["name"] == "Max HP Multiplier":
+		var maxHpIncrease = (amount * playerBaseStats["playerMaxHP"]["value"]) -  (playerBaseStats["playerMaxHP"]["value"] * playerUpgradeableStats["playerMaxHpMultiplier"]["value"])
+		playerBaseStats["playerCurrentHP"]["value"] = maxHpIncrease + playerBaseStats["playerCurrentHP"]["value"]
 	if statInfo in playerBaseStats.values():
 		playerBaseStats[playerBaseStats.find_key(statInfo)]["value"] = amount
 		PlayerStatUpdated.emit()

@@ -4,6 +4,7 @@ class_name Player
 #signals
 signal ReadyForTarget(range)
 signal PlayerLeveledUp
+signal PlayerDied
 
 
 #character stats import
@@ -35,6 +36,9 @@ func _process(delta: float) -> void:
 func wasHit(hitBy: Node, dmg: int) -> void:
 	if (!isInvincible):
 		playerStats.setStat("playerCurrentHP", playerStats.getStat("playerCurrentHP") - dmg)
+		if (playerStats.getStat("playerCurrentHP") <= 0):
+			PlayerDied.emit()
+			return
 		isInvincible = true
 		invTimer.start(playerStats.getStat("playerInvincibilityDurationSecs"))
 
@@ -56,8 +60,6 @@ func checkForAndLevelUp() -> void:
 		playerStats.setStat("playerCurrentXP", playerStats.getStat("playerCurrentXP") - playerStats.getStat("playerXpToLevel"))
 		playerStats.setStat("playerXpToLevel", playerStats.getStat("playerXpToLevel") * playerStats.getStat("playerXpToLevelMultiplier"))
 		PlayerLeveledUp.emit()
-		
-		#_checkForAndLevelUp() #This is so that multiple levels can be gained at once, if the xp is collected.
 	
 func gainXp(val: int):
 	playerStats.setStat("playerCurrentXP", playerStats.getStat("playerCurrentXP") + playerStats.getStat("playerXpGainMultiplier") * val)

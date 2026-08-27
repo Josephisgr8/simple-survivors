@@ -24,6 +24,8 @@ func addOptions() -> void:
 	#add_child(optionContainer)
 
 func _addOptionsToContainer(container: VBoxContainer, statList: Array, optionAmount: int) -> void:
+	if optionAmount > statList.size():
+		optionAmount = statList.size()
 	for i in range(optionAmount):
 		var randStat = statList.pick_random()
 		statList.erase(randStat)

@@ -19,6 +19,6 @@ func _process(delta: float) -> void:
 	pass
 
 func _updateHUD() -> void:
-	health_label.text = str("Health: ", playerStats.getStat("playerCurrentHP"), "/", (ceili(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier"))))
+	health_label.text = str("Health: ", ceili(playerStats.getStat("playerCurrentHP")), "/", (ceili(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier"))))
 	xp_label.text = str("XP: ", ceili(playerStats.getStat("playerCurrentXP")), "/", ceili(playerStats.getStat("playerXpToLevel")))
 	player_level_label.text = str("Level: ", playerStats.getStat("playerCurrentLevel"))
