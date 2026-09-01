@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cksoooc5obp86"]
+
+[ext_resource type="Script" uid="uid://djkq355wi2n8i" path="res://Scripts/PlayerWeaponManagers/missile_manager.gd" id="1_nco8q"]
+
+[node name="Missile Manager" type="Node" unique_id=2009898789]
+script = ExtResource("1_nco8q")

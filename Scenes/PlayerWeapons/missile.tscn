@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bh3a2sclamoua"]
 
 [ext_resource type="Texture2D" uid="uid://b7d04m363g0dh" path="res://Assets/Sprites/Missile.png" id="1_1g1yv"]
-[ext_resource type="Script" uid="uid://dhkevpj576aj8" path="res://Scripts/missile.gd" id="1_u28tq"]
+[ext_resource type="Script" uid="uid://dhkevpj576aj8" path="res://Scripts/PlayerWeapons/missile.gd" id="1_u28tq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nhhn2"]
 size = Vector2(60, 16)

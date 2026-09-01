@@ -1,4 +1,5 @@
 extends Area2D
+class_name Missile
 
 #signal
 signal enemyHitWithMissile(target)

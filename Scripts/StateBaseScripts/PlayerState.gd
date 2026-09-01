@@ -21,5 +21,5 @@ func changeState(newState) -> void:
 	changePlayerState.emit(newState)
 	pass
 	
-func move(dir):
+func move(_dir):
 	pass

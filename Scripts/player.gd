@@ -16,14 +16,16 @@ var isInvincible := false
 
 
 @onready var invTimer: Timer = $invincibilityTimer
-@onready var missile_manager: Node = $"Missile Manager"
+var missile_manager: MissileManager
+#@onready var missile_manager: Node = $"Missile Manager"
 @onready var player_state_manager: Node = $PlayerStateManager
 
 func _ready() -> void:
+	missile_manager = MissileManager.new()
 	_updateMissileManager()
-	missile_manager.MissileReadyToFire.connect(_onMissileReadyToFire)
+	missile_manager.WeaponReadyToFire.connect(_onMissileReadyToFire)
 	playerStats.setStat("playerCurrentHP", int(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier")))
-
+	add_child(missile_manager)
 	
 #for processing non-physics logic
 func _process(delta: float) -> void:
@@ -66,4 +68,4 @@ func gainXp(val: int):
 	checkForAndLevelUp()
 	
 func fireMissile(pos: Vector2):
-	missile_manager.createMissile(global_position, pos)
+	missile_manager.createWeapon(global_position, pos)

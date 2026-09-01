@@ -8,7 +8,7 @@ signal LevelUpChoiceSelected
 const PLAYER_LEVEL_UP_MENU_OPTION = preload("uid://cquqiq7l3tokj")
 
 var playerStats: PlayerStatsResource
-var numOfOptions: int = 3
+var numOfOptions: int = 9
 #var optionContainer: VBoxContainer
 
 # Called when the node enters the scene tree for the first time.
