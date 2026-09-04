@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://5my3assbdii2"]
+
+[ext_resource type="Script" uid="uid://cd6fpkne0b4wi" path="res://Scripts/PlayerWeapons/boomerang.gd" id="1_yf4dn"]
+[ext_resource type="Texture2D" uid="uid://cxcdpr3cprlg7" path="res://Assets/Sprites/Boomerang.png" id="2_ph7fq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nhhn2"]
+size = Vector2(320, 105.78512)
+
+[node name="Boomerang" type="Area2D" unique_id=526494864]
+scale = Vector2(0.275, 0.275)
+script = ExtResource("1_yf4dn")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2001528996]
+position = Vector2(24, 40)
+texture = ExtResource("2_ph7fq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=441254238]
+position = Vector2(28.727272, 4.5)
+scale = Vector2(0.275, 0.275)
+shape = SubResource("RectangleShape2D_nhhn2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=594814551]
+position = Vector2(0, -25.454546)
+rotation = 1.5707964
+scale = Vector2(0.275, 0.275)
+shape = SubResource("RectangleShape2D_nhhn2")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

@@ -29,7 +29,8 @@ signal PlayerStatUpdated
 	"playerSizeMultiplier": {"value": 1.00, "name": "Size Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
 	"playerProjectileSpeedMultiplier": {"value": 1.00, "name": "Projectile Speed Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
 	"playerXpGainMultiplier": {"value": 1.00, "name": "XP Gain Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
-	"playerXpPickupRangeMultiplier": {"value": 1.00, "name": "XP Pickup Range Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20}
+	"playerXpPickupRangeMultiplier": {"value": 1.00, "name": "XP Pickup Range Multiplier", "upgradeMinimum": .05, "upgradeMaximum": .20},
+	"playerProjectilePenetrationMultiplier": {"value": 1, "name": "Projectile Penetration Multiplier", "upgradeMinimum": 1, "upgradeMaximum": 1}
 	
 }
 

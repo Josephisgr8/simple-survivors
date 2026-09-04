@@ -12,9 +12,10 @@ const PLAYER_LEVEL_UP_MENU = preload("uid://dh61e7rw4y7p4")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	player.ReadyForTarget.connect(_onReadyForTarget)
+	#player.ReadyForTarget.connect(_onReadyForTarget)
 	player.PlayerLeveledUp.connect(_onPlayerLeveledUp)
 	player.PlayerDied.connect(_onPlayerDied)
+	player.connectWeaponManagersToClosestTargetSource(enemyManager.findEnemyNearestTarget)
 	
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)
@@ -25,16 +26,6 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_updateManagers(player.global_position)
-	pass
-
-
-func _onReadyForTarget(rng):
-	#find loc of enemy nearest the player
-	var closestEnemy = enemyManager.findEnemyNearestTarget(rng)
-	if closestEnemy == null:
-		player.fireMissile(player.global_position)
-	else:
-		player.fireMissile(closestEnemy)
 
 func _onPlayerLeveledUp():
 	Engine.time_scale = 0

@@ -14,12 +14,28 @@ func _init() -> void:
 	penetrationValue = 1
 
 
+#required overrides
+func updateVariables(stats: PlayerStatsResource) -> void:
+	projectileSpeedMult = stats.getStat("playerProjectileSpeedMultiplier")
+	castSpeedMult = stats.getStat("playerCastSpeedMultiplier")
+	projectileDamageMult = stats.getStat("playerDamageMultiplier")
+	rangeMult = stats.getStat("playerRangeMultiplier")
+	sizeMult = stats.getStat("playerSizeMultiplier")
+	penetrationValueMult = stats.getStat("playerProjectilePenetrationMultiplier")
+	attackTimer.wait_time = castSpeed / castSpeedMult
+	if get_parent() == null:
+		return
+	casterPosition = get_parent().global_position
+
 func createWeapon(fromPos: Vector2, toPos: Vector2) -> void:
 	var newMissile = missileBlueprint.instantiate()
 	
 	#set var values and add missile to list
-	newMissile.global_position = fromPos
-	newMissile.look_at(toPos)
+	newMissile.global_position = casterPosition
+	if closestTarget.call(castRange * rangeMult) == null:
+		newMissile.look_at(Vector2.RIGHT)
+	else:
+		newMissile.look_at(closestTarget.call(castRange * rangeMult))
 	newMissile.global_scale = newMissile.global_scale * sizeMult
 	newMissile.penetrationValue = penetrationValue * penetrationValueMult
 	weaponList.append(newMissile)
@@ -27,7 +43,7 @@ func createWeapon(fromPos: Vector2, toPos: Vector2) -> void:
 	add_child(newMissile)
 	
 	#set up signal for each new missile
-	newMissile.enemyHitWithMissile.connect(_onEnemyHitWithWeapon)
+	newMissile.enemyHitWithWeapon.connect(_onEnemyHitWithWeapon)
 
 
 func _onEnemyHitWithWeapon(enemy, missile):

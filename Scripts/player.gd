@@ -2,7 +2,6 @@ extends CharacterBody2D
 class_name Player
 
 #signals
-signal ReadyForTarget(range)
 signal PlayerLeveledUp
 signal PlayerDied
 
@@ -16,16 +15,18 @@ var isInvincible := false
 
 
 @onready var invTimer: Timer = $invincibilityTimer
-var missile_manager: MissileManager
-#@onready var missile_manager: Node = $"Missile Manager"
+var weapon_managers: Array[PlayerWeaponManagerBase] = []
 @onready var player_state_manager: Node = $PlayerStateManager
 
+
 func _ready() -> void:
-	missile_manager = MissileManager.new()
+	weapon_managers.append(MissileManager.new())
+	weapon_managers.append(BoomerangManager.new())
+	#missile_manager = BoomerangManager.new()#MissileManager.new()
 	_updateMissileManager()
-	missile_manager.WeaponReadyToFire.connect(_onMissileReadyToFire)
 	playerStats.setStat("playerCurrentHP", int(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier")))
-	add_child(missile_manager)
+	for mg: PlayerWeaponManagerBase in weapon_managers:
+		add_child(mg)
 	
 #for processing non-physics logic
 func _process(delta: float) -> void:
@@ -48,13 +49,16 @@ func wasHit(hitBy: Node, dmg: int) -> void:
 func _on_invincibility_timer_timeout() -> void:
 	isInvincible = false
 	
+	
+func connectWeaponManagersToClosestTargetSource(findNearestTarget: Callable):
+	for mg: PlayerWeaponManagerBase in weapon_managers:
+		mg.closestTarget = findNearestTarget
+
 #missile methods
 func _updateMissileManager() -> void:
-	missile_manager.updateVariables(playerStats.getStat("playerProjectileSpeedMultiplier"), playerStats.getStat("playerCastSpeedMultiplier"), playerStats.getStat("playerDamageMultiplier"), playerStats.getStat("playerRangeMultiplier"), playerStats.getStat("playerSizeMultiplier"))
+	for mg: PlayerWeaponManagerBase in weapon_managers:
+		mg.updateVariables(playerStats)
 	
-func _onMissileReadyToFire(rng):
-	#scan the area in range, select an enemy, and fire at them
-	ReadyForTarget.emit(rng)
 	
 func checkForAndLevelUp() -> void:
 	if playerStats.getStat("playerCurrentXP") >= playerStats.getStat("playerXpToLevel"):
@@ -63,9 +67,7 @@ func checkForAndLevelUp() -> void:
 		playerStats.setStat("playerXpToLevel", playerStats.getStat("playerXpToLevel") * playerStats.getStat("playerXpToLevelMultiplier"))
 		PlayerLeveledUp.emit()
 	
-func gainXp(val: int):
+func gainXp(val: float):
 	playerStats.setStat("playerCurrentXP", playerStats.getStat("playerCurrentXP") + playerStats.getStat("playerXpGainMultiplier") * val)
 	checkForAndLevelUp()
 	
-func fireMissile(pos: Vector2):
-	missile_manager.createWeapon(global_position, pos)

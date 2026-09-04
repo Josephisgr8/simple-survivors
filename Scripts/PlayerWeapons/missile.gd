@@ -2,7 +2,7 @@ extends Area2D
 class_name Missile
 
 #signal
-signal enemyHitWithMissile(target)
+signal enemyHitWithWeapon
 
 var distTraveled: float
 var penetrationValue: int
@@ -17,14 +17,14 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	#signal when hitting enemy
 	pass
-			
+	
+
 func _on_area_entered(area: Area2D) -> void:
 	#with the collision mask, this will always be an enemy
 	
 	#if enemy already hit, don't count as hit
 	if enemiesHitList.has(area):
 		return
-	enemyHitWithMissile.emit(area, self)
+	enemyHitWithWeapon.emit(area, self)
 	enemiesHitList.append(area)

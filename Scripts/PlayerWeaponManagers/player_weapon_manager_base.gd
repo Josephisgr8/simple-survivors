@@ -2,11 +2,12 @@ extends Node
 class_name PlayerWeaponManagerBase
 
 #signals for parent
-signal WeaponReadyToFire(range)
 
 #members to handle weapons
 var weaponList: Array[Area2D]
 var attackTimer: Timer = Timer.new()
+var closestTarget: Callable
+var casterPosition: Vector2
 
 #base stats
 var projectileSpeed : float
@@ -41,20 +42,12 @@ func _initAttackTimer() -> Timer:
 	return timer
 	
 func _on_weapon_attack_timer_timeout() -> void:
-	WeaponReadyToFire.emit(castRange * rangeMult)
-
-#update Variables
-func updateVariables(projSpdMult, cstSpdMult, dmgMult, rngMult, szMult) -> void:
-	projectileSpeedMult = projSpdMult
-	castSpeedMult = cstSpdMult
-	projectileDamageMult = dmgMult
-	rangeMult = rngMult
-	sizeMult = szMult
-	if (castSpeed/castSpeedMult) <= 0:
-		print("stiop")
-	attackTimer.wait_time = castSpeed / castSpeedMult
+	createWeapon(Vector2.ZERO, Vector2.ZERO)
+	
 
 #functions to be overridden
+func updateVariables(stats: PlayerStatsResource):
+	assert(false, "Error: %s must override the updateVariables function!" % get_script().resource_path.get_file())
 func _onEnemyHitWithWeapon(_enemy, _weapon):
 	assert(false, "Error: %s must override the _onEnemyHitWithWeapon function!" % get_script().resource_path.get_file())
 func createWeapon(_fromPos: Vector2, _toPos: Vector2) -> void:
