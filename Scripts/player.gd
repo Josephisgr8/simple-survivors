@@ -20,8 +20,9 @@ var weapon_managers: Array[PlayerWeaponManagerBase] = []
 
 
 func _ready() -> void:
-	weapon_managers.append(MissileManager.new())
-	weapon_managers.append(BoomerangManager.new())
+	#weapon_managers.append(MissileManager.new())
+	#weapon_managers.append(BoomerangManager.new())
+	weapon_managers.append(RubberBallManager.new())
 	#missile_manager = BoomerangManager.new()#MissileManager.new()
 	_updateMissileManager()
 	playerStats.setStat("playerCurrentHP", int(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier")))

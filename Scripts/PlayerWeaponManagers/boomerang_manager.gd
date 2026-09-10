@@ -32,11 +32,10 @@ func createWeapon(fromPos: Vector2, toPos: Vector2) -> void:
 	
 	newBoomerang.global_position = casterPosition
 	newBoomerang.global_scale = newBoomerang.global_scale * sizeMult
-	if closestTarget.call(castRange * rangeMult) == null:
+	if closestTarget.call(casterPosition, castRange * rangeMult) == null:
 		newBoomerang.flightDestination = Vector2.RIGHT * castRange * rangeMult
 	else:
-		newBoomerang.flightDestination = casterPosition + newBoomerang.global_position.direction_to(closestTarget.call(castRange * rangeMult)) * castRange * rangeMult
-		print(newBoomerang.global_position.direction_to(closestTarget.call(castRange * rangeMult)))
+		newBoomerang.flightDestination = casterPosition + newBoomerang.global_position.direction_to(closestTarget.call(casterPosition, castRange * rangeMult)) * castRange * rangeMult
 	newBoomerang.bouncesRemaining = numberOfBounces
 	newBoomerang.isReturning = false
 	weaponList.append(newBoomerang)
@@ -81,7 +80,7 @@ func _handleBoomerangBounce(br: Boomerang, stepDistance: float):
 		br.bouncesRemaining -= 1
 		br.isReturning = false
 		br.enemiesHitList.clear()
-		if closestTarget.call(castRange * rangeMult) == null:
-			br.flightDestination = closestTarget.call(castRange*rangeMult)
+		if closestTarget.call(casterPosition, castRange * rangeMult) != null:
+			br.flightDestination = casterPosition + br.global_position.direction_to(closestTarget.call(casterPosition, castRange * rangeMult)) * castRange * rangeMult#br.flightDestination = closestTarget.call(casterPosition, castRange*rangeMult)
 		else:
 			br.flightDestination = Vector2.RIGHT * castRange * rangeMult

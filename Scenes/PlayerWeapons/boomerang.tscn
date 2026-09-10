@@ -8,6 +8,7 @@ size = Vector2(320, 105.78512)
 
 [node name="Boomerang" type="Area2D" unique_id=526494864]
 scale = Vector2(0.275, 0.275)
+collision_mask = 2
 script = ExtResource("1_yf4dn")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2001528996]

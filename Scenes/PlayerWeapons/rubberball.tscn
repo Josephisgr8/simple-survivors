@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cl7fon6wom1vf"]
+
+[ext_resource type="Script" uid="uid://csme5bqiy17j2" path="res://Scripts/PlayerWeapons/rubberball.gd" id="1_s5fmk"]
+[ext_resource type="Texture2D" uid="uid://cu86sedm477tj" path="res://Assets/Sprites/RubberBall.png" id="2_g1uxg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nhhn2"]
+radius = 33.0
+
+[node name="Rubberball" type="Area2D" unique_id=1808223127]
+scale = Vector2(0.2, 0.2)
+collision_mask = 2
+script = ExtResource("1_s5fmk")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1951600659]
+position = Vector2(-40, 59)
+scale = Vector2(2.06, 2.06)
+texture = ExtResource("2_g1uxg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=661793844]
+position = Vector2(0, 2)
+shape = SubResource("CircleShape2D_nhhn2")

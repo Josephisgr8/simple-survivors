@@ -32,10 +32,10 @@ func createWeapon(fromPos: Vector2, toPos: Vector2) -> void:
 	
 	#set var values and add missile to list
 	newMissile.global_position = casterPosition
-	if closestTarget.call(castRange * rangeMult) == null:
+	if closestTarget.call(casterPosition, castRange * rangeMult) == null:
 		newMissile.look_at(Vector2.RIGHT)
 	else:
-		newMissile.look_at(closestTarget.call(castRange * rangeMult))
+		newMissile.look_at(closestTarget.call(casterPosition, castRange * rangeMult))
 	newMissile.global_scale = newMissile.global_scale * sizeMult
 	newMissile.penetrationValue = penetrationValue * penetrationValueMult
 	weaponList.append(newMissile)

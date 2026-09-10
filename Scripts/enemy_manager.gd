@@ -85,19 +85,21 @@ func _onEnemyDifficultyIncreaseTimeElapsed():
 	xpValueMult += (xpValueMult * enemyDifficultyIncreaseScale)
 	
 
-func findEnemyNearestTarget(rng):
+func findEnemyNearestTarget(src: Vector2, rng: float, ignoredTargets: Array = []):
 	#loop through enemies and find shortest distance that is also in given range
 	var closestEnemy = null
 	#for each enemy alive
 	for i in range(0, enemyList.size()):
-		var currEnemyDist = enemyList.get(i).global_position.distance_to(targetPosition)
+		if ignoredTargets.has(enemyList.get(i)):
+			continue
+		var currEnemyDist = enemyList.get(i).global_position.distance_to(src)
 		#if they are within range
 		if  currEnemyDist <= rng:
 			#set first enemy within range
 			if closestEnemy == null:
 				closestEnemy= enemyList.get(i)
 			#else, check if they are closer, and if so assign them as closest
-			elif currEnemyDist < closestEnemy.global_position.distance_to(targetPosition):
+			elif currEnemyDist < closestEnemy.global_position.distance_to(src):
 				closestEnemy = enemyList.get(i)
 	if (closestEnemy != null):
 		return closestEnemy.global_position
