@@ -9,6 +9,7 @@ radius = 49.0
 height = 104.0
 
 [node name="Player" type="CharacterBody2D" unique_id=470280197]
+z_index = 1
 script = ExtResource("1_cvnsp")
 
 [node name="PlayerStateManager" type="Node" parent="." unique_id=1069392721]

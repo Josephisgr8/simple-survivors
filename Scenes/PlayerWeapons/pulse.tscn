@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://j6mw26jnxn2n"]
+
+[ext_resource type="Script" uid="uid://ck81ayevaqodn" path="res://Scripts/PlayerWeapons/pulse.gd" id="1_3pmwj"]
+[ext_resource type="Texture2D" uid="uid://clan2jokddheh" path="res://Assets/Sprites/Pulse.png" id="2_oy8xi"]
+
+[node name="Pulse" type="Area2D" unique_id=1108168649]
+script = ExtResource("1_3pmwj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1617252163]
+position = Vector2(-10, 6)
+texture = ExtResource("2_oy8xi")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=2059394935]
+build_mode = 1
+polygon = PackedVector2Array(0, 103, -26, 99, -50, 89, -70, 74, -86, 53, -96, 29, -100, 3, -96, -23, -86, -47, -70, -68, -50, -84, -26, -94, 0, -97, 0, -83, -22, -79, -44, -70, -61, -57, -74, -40, -83, -19, -85, 4, -82, 27, -73, 50, -60, 66, -45, 78, -23, 87, 0, 90)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="." unique_id=143561467]
+position = Vector2(0, 7)
+rotation = 3.141278
+build_mode = 1
+polygon = PackedVector2Array(0, 103, -26, 99, -50, 89, -70, 74, -86, 53, -96, 29, -100, 3, -96, -23, -86, -47, -70, -68, -50, -84, -26, -94, 0, -97, 0, -83, -22, -79, -44, -70, -61, -57, -74, -40, -83, -19, -85, 4, -82, 27, -73, 50, -60, 66, -45, 78, -23, 87, 0, 90)
