@@ -15,7 +15,9 @@ func _ready() -> void:
 	#player.ReadyForTarget.connect(_onReadyForTarget)
 	player.PlayerLeveledUp.connect(_onPlayerLeveledUp)
 	player.PlayerDied.connect(_onPlayerDied)
-	player.connectWeaponManagersToClosestTargetSource(enemyManager.findEnemyNearestTarget)
+	#player.connectWeaponManagersToClosestTargetSource(enemyManager.findEnemyNearestTarget)
+	player.findNearestEnemy = enemyManager.findEnemyNearestTarget
+	player.connectWeaponManagersToClosestTargetSource()
 	
 	enemyManager.PlayerIsBeingHit.connect(_onPlayerIsBeingHit)
 	enemyManager.EnemyDied.connect(_onEnemyDied)

@@ -4,5 +4,4 @@
 
 [resource]
 script = ExtResource("1_egbbo")
-currHP = null
 metadata/_custom_type_script = "uid://dk42uyvd0tt8v"

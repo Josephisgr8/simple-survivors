@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cuu4ny68oqmyo" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://dxxubuy33m53w" path="res://Assets/Sprites/Player.png" id="2_6t5aa"]
+[ext_resource type="Resource" uid="uid://cb42kkchh5580" path="res://Scripts/Resources/player_stats_resource.tres" id="2_fkybt"]
 [ext_resource type="Script" uid="uid://6l2vvcbr4ngh" path="res://Scripts/player_state_manager.gd" id="2_vgqql"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gn4dx"]
@@ -11,6 +12,7 @@ height = 104.0
 [node name="Player" type="CharacterBody2D" unique_id=470280197]
 z_index = 1
 script = ExtResource("1_cvnsp")
+playerStats = ExtResource("2_fkybt")
 
 [node name="PlayerStateManager" type="Node" parent="." unique_id=1069392721]
 script = ExtResource("2_vgqql")

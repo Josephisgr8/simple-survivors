@@ -9,9 +9,15 @@ signal PlayerDied
 #character stats import
 @export var playerStats: PlayerStatsResource
 
+#character weapons import
+var allPlayerWeapons: AllPlayerWeapons = AllPlayerWeapons.new()
 
 #player flags
 var isInvincible := false
+
+
+#used to assign to different weapon managers dynamically
+var findNearestEnemy: Callable
 
 
 @onready var invTimer: Timer = $invincibilityTimer
@@ -23,15 +29,16 @@ func _ready() -> void:
 	#weapon_managers.append(MissileManager.new())
 	#weapon_managers.append(BoomerangManager.new())
 	#weapon_managers.append(RubberBallManager.new())
-	weapon_managers.append(PulseManager.new())
-	_updateMissileManager()
+	#weapon_managers.append(PulseManager.new())
+	weapon_managers.append(allPlayerWeapons.getRandomWeapon())
+	_updateWeaponManagers()
 	playerStats.setStat("playerCurrentHP", int(playerStats.getStat("playerMaxHP") * playerStats.getStat("playerMaxHpMultiplier")))
 	for mg: PlayerWeaponManagerBase in weapon_managers:
 		add_child(mg)
 	
 #for processing non-physics logic
 func _process(delta: float) -> void:
-	_updateMissileManager()
+	_updateWeaponManagers()
 	
 	var movementDirection = Input.get_vector("Left", "Right", "Up", "Down")
 	player_state_manager.move(movementDirection)
@@ -51,14 +58,22 @@ func _on_invincibility_timer_timeout() -> void:
 	isInvincible = false
 	
 	
-func connectWeaponManagersToClosestTargetSource(findNearestTarget: Callable):
+func connectWeaponManagersToClosestTargetSource():
 	for mg: PlayerWeaponManagerBase in weapon_managers:
-		mg.closestTarget = findNearestTarget
+		mg.closestTarget = findNearestEnemy
 
-#missile methods
-func _updateMissileManager() -> void:
+#Weapon methods
+func _updateWeaponManagers() -> void:
 	for mg: PlayerWeaponManagerBase in weapon_managers:
 		mg.updateVariables(playerStats)
+		
+func _addWeapon() -> void:
+	var nw: PlayerWeaponManagerBase = allPlayerWeapons.getRandomWeapon(weapon_managers)
+	if nw == null:
+		return
+	weapon_managers.append(nw)
+	connectWeaponManagersToClosestTargetSource()
+	add_child(nw)
 	
 	
 func checkForAndLevelUp() -> void:
@@ -67,6 +82,7 @@ func checkForAndLevelUp() -> void:
 		playerStats.setStat("playerCurrentXP", playerStats.getStat("playerCurrentXP") - playerStats.getStat("playerXpToLevel"))
 		playerStats.setStat("playerXpToLevel", playerStats.getStat("playerXpToLevel") * playerStats.getStat("playerXpToLevelMultiplier"))
 		PlayerLeveledUp.emit()
+		_addWeapon()
 	
 func gainXp(val: float):
 	playerStats.setStat("playerCurrentXP", playerStats.getStat("playerCurrentXP") + playerStats.getStat("playerXpGainMultiplier") * val)
